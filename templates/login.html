@@ -2,18 +2,22 @@
 <html>
 <head>
     <title>Login</title>
+    <link rel="stylesheet" href="../static/style.css">
 </head>
 <body>
-    <h1>Login</h1>
-    {% if mensaje %}
-        <p>{{ mensaje }}</p>
-    {% endif %}
-    <form method="post" action="/login">
-        <label for="usuario">Usuario:</label><br>
-        <input type="text" id="usuario" name="usuario" required><br>
-        <label for="contraseña">Contraseña:</label><br>
-        <input type="password" id="contraseña" name="contraseña" required><br><br>
-        <input type="submit" value="Iniciar sesión">
-    </form>
+    <div class="main">
+        <h1 class="titulo">Login</h1>
+        {% if mensaje %}
+            <p>{{ mensaje }}</p>
+        {% endif %}
+        <form method="post" action="/login">
+            <!--<label for="usuario">Usuario:</label><br>-->
+            <input class="campo" type="text" id="usuario" name="usuario" placeholder="Usuario" required><br>
+            <!--<label for="contraseña">Contraseña:</label><br>-->
+            <input class="campo" type="password" id="contraseña" name="contraseña" placeholder="Contraseña" required><br><br>
+            <input type="submit" class ="submit" value="Iniciar sesión">
+            <p> <a  href="{{url_for('registro')}}"> Crear una cuenta</a></p>
+        </form>
+    </div>
 </body>
 </html>
