@@ -58,10 +58,10 @@ def registro():
     return render_template('registro.html')
 
 
-# Vista página de inicio
+# Vista Prueba
 @app.route('/')
 @login_required
-def inicio():
+def prueba():
     return f'Bienvenido, {current_user.usuario}! <a href="/logout">Cerrar sesión</a>'
 
 # Vista cerrar sesión
@@ -71,10 +71,12 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-#Vista Prueba   
+#Vista Home  
 @app.route('/home',methods=['GET'])
-def home():
-    return 'Hola TFG'
+@login_required
+def inicio():
+    # Pasa el usuario conectado 
+    return render_template('home.html', nombre_usuario=current_user.usuario)
 
 if __name__ == '__main__':
     with app.app_context():

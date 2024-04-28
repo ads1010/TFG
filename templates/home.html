@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Inicio</title>
+    <link rel="stylesheet" href="../static/home.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">   <!-- Para comenzar el uso de boostrap-->
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="row"> 
+                <div class="col-xs-12 col-md-8">
+                    <h1 class="titulo">Bienvenido, {{ nombre_usuario }}</h1>
+                </div>
+                <div class="col-xs-12 col-md-2">
+                    Busqueda
+                </div>
+                <div class="col-xs-12 col-md-2">
+                    <a href="/logout">Cerrar sesión</a>
+                </div>
+        </div>
+    </header>
+    <div class="d-flex"> 
+        <div class="row"> <!-- organiza  contenido en filas -->
+            <!-- Barra lateral -->
+            <div class="col-xs-12 col-md-6">
+                <div class="sidebar">
+                    <h2>Lateral</h2>
+                    <!--<form method="POST" action="/upload" enctype="multipart/form-data">
+                        <input type="file" class="form-control-file text-white" name="file">
+                        <button type="submit" class="btn btn-primary">Subir archivo</button>
+                    </form>-->
+                    <p>Item 1 </p>
+                </div>
+            </div>
+        
+            <!-- Contenido principal -->
+            <div class="col-xs-12 col-md-6">
+                <div class="content">
+                    <h1>Contenido</h1>
+                    <p>Contenido principal de la página.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="mt-5">
+        <div class="container">
+            <p>Álvaro Díez Sáenz - Todos los derechos reservados</p>
+        </div>
+    </footer>
+</body>
+</html>
