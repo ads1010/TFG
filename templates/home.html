@@ -31,6 +31,7 @@
                         <button type="submit" class="btn btn-primary">Subir archivo</button>
                     </form>-->
                     <p>Item 1 </p>
+                    <button id="abrirPopup" class="btn btn-primary" >Subir archivos</button>
                 </div>
             </div>
         
@@ -48,5 +49,11 @@
             <p>Álvaro Díez Sáenz - Todos los derechos reservados</p>
         </div>
     </footer>
+
+    <script>
+        document.getElementById('abrirPopup').addEventListener('click', function() {
+            window.open('/upload', 'popup', 'width=600,height=400');
+        });
+    </script>
 </body>
 </html>

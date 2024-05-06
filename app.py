@@ -1,12 +1,19 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from models import Usuario, db
+from werkzeug.utils import secure_filename   #Para evitar nombres de archivo inseguros
+import os
 
 
 app = Flask(__name__)
 app.secret_key = '2c1f2bceaff99004'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///usuarios.db'  # Nombre de la base de datos SQLite
 db.init_app(app)
+
+UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files')    #Directorio base donde se guardan los archivos
+#ALLOWED_EXTENSIONS = {'txt', 'pdf','jpg', 'jpeg'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 
 # Configuración de Flask-Login
 login_manager = LoginManager()
@@ -77,6 +84,16 @@ def logout():
 def inicio():
     # Pasa el usuario conectado 
     return render_template('home.html', nombre_usuario=current_user.usuario)
+
+#Vista Home  
+@app.route('/upload',methods=['GET', 'POST'])
+@login_required
+def upload():
+    if request.method == 'POST':
+        file = request.files['file']
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(UPLOAD_FOLDER, filename))
+    return render_template('uploadPop.html')
 
 if __name__ == '__main__':
     with app.app_context():
