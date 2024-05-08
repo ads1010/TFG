@@ -19,10 +19,16 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+#Lsitado de los directorios 
+def listar_archivos():
+    return (os.listdir(UPLOAD_FOLDER))
+
+
 # Función para cargar un usuario
 @login_manager.user_loader
 def cargar_usuario(usuario_id):
     return Usuario.query.get(int(usuario_id))
+
 
 # Vista inicio de sesión
 @app.route('/login', methods=['GET', 'POST'])
@@ -83,7 +89,8 @@ def logout():
 @login_required
 def inicio():
     # Pasa el usuario conectado 
-    return render_template('home.html', nombre_usuario=current_user.usuario)
+    files=listar_archivos()
+    return render_template('home.html', nombre_usuario=current_user.usuario, files= files)
 
 #Vista Home  
 @app.route('/upload',methods=['GET', 'POST'])
