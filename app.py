@@ -21,7 +21,10 @@ login_manager.init_app(app)
 
 #Lsitado de los directorios 
 def listar_archivos():
-    return (os.listdir(UPLOAD_FOLDER))
+    user_folder = os.path.join(UPLOAD_FOLDER, current_user.usuario)  #Verifcamos las carpetas por cada usuario 
+    if not os.path.exists(user_folder):
+        os.makedirs(user_folder)
+    return (os.listdir(user_folder))
 
 
 # Función para cargar un usuario
@@ -99,7 +102,10 @@ def upload():
     if request.method == 'POST':
         file = request.files['file']
         filename = secure_filename(file.filename)
-        file.save(os.path.join(UPLOAD_FOLDER, filename))
+        user_folder = os.path.join(UPLOAD_FOLDER, current_user.usuario)
+        if not os.path.exists(user_folder):
+            os.makedirs(user_folder)
+        file.save(os.path.join(user_folder, filename))
     return render_template('uploadPop.html')
 
 if __name__ == '__main__':
