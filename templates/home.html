@@ -18,7 +18,9 @@
                 <div class="col-xs-12 col-md-2">
                     <a href="/logout">Cerrar sesión</a>
                 </div>
+                
         </div>
+        <hr class="my-1"> 
     </header>
     <div class="d-flex">
         <!-- Barra lateral -->
@@ -35,7 +37,7 @@
             <div class="content">  <!-- Configuracion temporal para el contenido, buscando disposicion final-->
                 <h1>Contenido</h1>
                 {% for archivo in files %}
-                <div class="row align-items-center">
+                <div class="row align-items-center mb-3 mt-3"> 
                     <div class="col-xs-12 col-md-2">{{ archivo }}</div>
                     
                     <div class="col-xs-12 col-md-8">
@@ -43,8 +45,8 @@
                             <button type="submit" class="btn btn-outline-danger">Eliminar</button>
                         </form>
                     </div>
-                    
                 </div>
+                <hr class="my-1"> 
                 {% endfor %}
             </div>
         </div>
