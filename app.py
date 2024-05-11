@@ -95,7 +95,7 @@ def inicio():
     files=listar_archivos()
     return render_template('home.html', nombre_usuario=current_user.usuario, files= files)
 
-#Vista Home  
+
 @app.route('/upload',methods=['GET', 'POST'])
 @login_required
 def upload():
@@ -107,6 +107,15 @@ def upload():
             os.makedirs(user_folder)
         file.save(os.path.join(user_folder, filename))
     return render_template('uploadPop.html')
+
+@app.route('/delete/<nombre_archivo>', methods=['POST'])
+@login_required
+def delete_archivo(nombre_archivo):
+    user_folder = os.path.join(UPLOAD_FOLDER, current_user.usuario)
+    archivo = os.path.join(user_folder, nombre_archivo)
+    if os.path.exists(archivo):
+        os.remove(archivo)
+    return redirect(url_for('inicio'))  # Recargamos la pagina inico
 
 if __name__ == '__main__':
     with app.app_context():
