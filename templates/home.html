@@ -1,27 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <title>Inicio</title>
-    <link rel="stylesheet" href="../static/home.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">   <!-- Para comenzar el uso de boostrap-->
-</head>
-<body>
-    <header>
-        <div class="container">
-            <div class="row"> 
-                <div class="col-xs-12 col-md-8">
-                    <h1 class="titulo">Bienvenido, {{ nombre_usuario }}</h1>
-                </div>
-                <div class="col-xs-12 col-md-2">
-                    Busqueda
-                </div>
-                <div class="col-xs-12 col-md-2">
-                    <a href="/logout">Cerrar sesión</a>
-                </div>
-                
-        </div>
-        <hr class="my-1"> 
-    </header>
+{% extends 'base.html' %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
     <div class="d-flex">
         <!-- Barra lateral -->
         <div class="col-xs-12 col-md-2 ">
@@ -51,17 +32,4 @@
             </div>
         </div>
     </div>
-    
-    <footer class="mt-5">
-        <div class="container">
-            <p>Álvaro Díez Sáenz - Todos los derechos reservados</p>
-        </div>
-    </footer>
-
-    <script>
-        document.getElementById('abrirPopup').addEventListener('click', function() {
-            window.open('/upload', 'popup', 'width=600,height=400');
-        });
-    </script>
-</body>
-</html>
+    {% endblock %}
