@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
-from models import Usuario, db
+from models import Usuario, Archivo, db
 from werkzeug.utils import secure_filename   #Para evitar nombres de archivo inseguros
 import os
 
@@ -106,6 +106,10 @@ def upload():
         if not os.path.exists(user_folder):
             os.makedirs(user_folder)
         file.save(os.path.join(user_folder, filename))
+        # Primera forma de entrada en la base de datos
+        nuevo_archivo = Archivo(nombre=filename, ruta=os.path.join(user_folder, filename), propietario_id=current_user.id)
+        db.session.add(nuevo_archivo)
+        db.session.commit()
     return render_template('uploadPop.html')
 
 @app.route('/delete/<nombre_archivo>', methods=['POST'])

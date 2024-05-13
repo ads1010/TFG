@@ -23,3 +23,16 @@ class Usuario(db.Model):
 
     def get_id(self):
         return str(self.id)
+
+
+class Archivo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(255), nullable=False)
+    ruta = db.Column(db.String(255), nullable=False)
+    propietario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+
+
+class CompartirArchivo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    archivo_id = db.Column(db.Integer, db.ForeignKey('archivo.id'), nullable=False)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
