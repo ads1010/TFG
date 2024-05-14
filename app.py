@@ -37,10 +37,10 @@ def cargar_usuario(usuario_id):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        usuario = request.form['usuario']
+        email = request.form['email']
         contraseña = request.form['contraseña']
         
-        usuario_existente = Usuario.query.filter_by(usuario=usuario).first()
+        usuario_existente = Usuario.query.filter_by(email = email).first()
         if usuario_existente and usuario_existente.contraseña == contraseña:
             login_user(usuario_existente)
             return redirect(url_for('inicio'))
@@ -55,16 +55,17 @@ def login():
 def registro():
     if request.method == 'POST':
         usuario = request.form['usuario']
+        email = request.form['email']
         contraseña = request.form['contraseña']
         
         # Verifica si el usuario ya existe
-        usuario_existente = Usuario.query.filter_by(usuario=usuario).first()
-        if usuario_existente:
-            mensaje = 'El usuario ya existe. Por favor, elige otro nombre de usuario.'
+        email_existente = Usuario.query.filter_by(email=email).first()
+        if email_existente:
+            mensaje = 'El Email ya existe. Por favor, introduce otro email.'
             return render_template('registro.html', mensaje=mensaje)
         else:
             # Crea un nuevo usuario
-            nuevo_usuario = Usuario(usuario=usuario, contraseña=contraseña)
+            nuevo_usuario = Usuario(usuario=usuario,email=email,contraseña=contraseña)
             db.session.add(nuevo_usuario)
             db.session.commit()
             

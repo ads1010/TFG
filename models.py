@@ -6,6 +6,7 @@ db = SQLAlchemy()
 class Usuario(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     usuario = db.Column(db.String(100), unique=True, nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
     contraseña = db.Column(db.String(100), nullable=False)
     is_active = db.Column(db.Boolean, default=True)  # Necesario para flask-login
 
