@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -30,6 +31,7 @@ class Archivo(db.Model):
     nombre = db.Column(db.String(255), nullable=False)
     ruta = db.Column(db.String(255), nullable=False)
     propietario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    fecha_subida = db.Column(db.DateTime, nullable=False, default=datetime.utcnow) #Se trabaja directamente aqui por lo que no es necesario introducirlo al crear el Archivo
 
 
 class CompartirArchivo(db.Model):
