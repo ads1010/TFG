@@ -119,6 +119,11 @@ def delete_archivo(nombre_archivo):
     archivo = os.path.join(user_folder, nombre_archivo)
     if os.path.exists(archivo):
         os.remove(archivo)
+        # Primera forma de elimar en la base de datos 
+        archivo_bd = Archivo.query.filter_by(nombre=nombre_archivo, propietario_id=current_user.id).first()
+        if archivo_bd:
+            db.session.delete(archivo_bd)
+            db.session.commit()
     return redirect(url_for('inicio'))  # Recargamos la pagina inico
 
 if __name__ == '__main__':
