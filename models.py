@@ -39,3 +39,16 @@ class CompartirArchivo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     archivo_id = db.Column(db.Integer, db.ForeignKey('archivo.id'), nullable=False)
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+
+
+class Tarea(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    titulo = db.Column(db.String(255), nullable=False)
+    descripcion = db.Column(db.Text, nullable=False)
+    propietario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    fecha_creacion = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+class CompartirTarea(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    tarea_id = db.Column(db.Integer, db.ForeignKey('tarea.id'), nullable=False)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)

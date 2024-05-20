@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Tareas{% endblock %}
+
+{% block content %}
+<div class="d-flex">
+    <!-- Barra lateral -->
+    <div class="col-xs-12 col-md-2">
+        <div class="sidebar">
+            <h2>Lateral</h2>
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#crearTareaForm" aria-expanded="false" aria-controls="crearTareaForm">
+                Crear Nueva Tarea
+            </button> <br><hr>
+            <a href="{{ url_for('inicio') }}" class="btn btn-secondary mb-3">Archivos</a>
+            
+        </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="col-xs-12 col-md-10">
+        <div class="content">
+            <div class="collapse mt-3" id="crearTareaForm">
+                <form method="POST" action="{{ url_for('tareas') }}">
+                    <form method="post" action="{{ url_for('tareas') }}">
+                        <h2>Nueva Tarea</h2>
+                        <input class="form-control mb-2" type="text" id="titulo" name="titulo" placeholder="Título" required>
+                        <textarea class="form-control mb-2" id="descripcion" name="descripcion" placeholder="Descripción" rows="2" required></textarea>
+                        <input type="submit" class="btn btn-primary" value="Agregar Tarea">
+                        <hr class="my-1">
+                    </form>
+            </div>
+
+            <h2>Lista de Tareas</h2>
+            {% for tarea in tareas %}
+            <div class="row align-items-center mb-3 mt-3">
+                <div class="col-xs-12 col-md-10">
+                    <h5>{{ tarea.titulo }}</h5>
+                    <p>{{ tarea.descripcion }}</p>
+                </div>
+                <div class="col-xs-12 col-md-2 text-right">
+                    <a href="" class="btn btn-info mb-2">Compartir</a>
+                </div>
+            </div>
+            <hr class="my-1">
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

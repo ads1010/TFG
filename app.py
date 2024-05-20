@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
-from models import Usuario, Archivo, db
+from models import Usuario, Archivo, Tarea, db
 from werkzeug.utils import secure_filename   #Para evitar nombres de archivo inseguros
 import os
 
@@ -126,6 +126,21 @@ def delete_archivo(nombre_archivo):
             db.session.delete(archivo_bd)
             db.session.commit()
     return redirect(url_for('inicio'))  # Recargamos la pagina inico
+
+@app.route('/tareas', methods=['GET', 'POST'])
+@login_required
+def tareas():
+    if request.method == 'POST':
+        titulo = request.form['titulo']
+        descripcion = request.form['descripcion']
+        nueva_tarea = Tarea(titulo=titulo, descripcion=descripcion, propietario_id=current_user.id)
+        db.session.add(nueva_tarea)
+        db.session.commit()
+        return redirect(url_for('tareas'))
+    
+    tareas = Tarea.query.filter_by(propietario_id=current_user.id).all()
+    return render_template('tareas.html', tareas=tareas)
+
 
 if __name__ == '__main__':
     with app.app_context():
