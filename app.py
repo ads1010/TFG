@@ -18,6 +18,8 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # Configuración de Flask-Login
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_manager.login_view = 'login'  #Redireccion para login requerido
+
 
 #Lsitado de los directorios 
 def listar_archivos():
