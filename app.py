@@ -83,6 +83,12 @@ def registro():
 def prueba():
     return f'Bienvenido, {current_user.usuario}! <a href="/logout">Cerrar sesión</a>'
 
+
+@app.route('/home', methods=['GET'])
+@login_required
+def inicio():
+    return render_template('home.html')
+
 # Vista cerrar sesión
 @app.route('/logout')
 @login_required
