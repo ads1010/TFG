@@ -90,13 +90,13 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-#Vista Home  
-@app.route('/home',methods=['GET'])
+#Vista archivos  
+@app.route('/archivos',methods=['GET'])
 @login_required
-def inicio():
+def archivos():
     # Pasa el usuario conectado 
     files=listar_archivos()
-    return render_template('home.html', nombre_usuario=current_user.usuario, files= files)
+    return render_template('archivos.html', nombre_usuario=current_user.usuario, files= files)
 
 
 @app.route('/upload',methods=['GET', 'POST'])
@@ -127,7 +127,7 @@ def delete_archivo(nombre_archivo):
         if archivo_bd:
             db.session.delete(archivo_bd)
             db.session.commit()
-    return redirect(url_for('inicio'))  # Recargamos la pagina inico
+    return redirect(url_for('archivos'))  # Recargamos la pagina inico
 
 @app.route('/tareas', methods=['GET', 'POST'])
 @login_required
