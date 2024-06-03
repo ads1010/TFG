@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
-from models import Usuario, Archivo, Tarea, db
+from models import Usuario, Archivo, Tarea, Grupo, GrupoUsuario, db
 from werkzeug.utils import secure_filename   #Para evitar nombres de archivo inseguros
 import os
 
