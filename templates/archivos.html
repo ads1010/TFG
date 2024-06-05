@@ -3,17 +3,15 @@
 {% block title %}Archivos{% endblock %}
 
 {% block content %}
-    <div class="d-flex">
-        <!-- Barra lateral -->
-        <div class="col-xs-12 col-md-2 ">
-            <div class="sidebar">
-                <h2>Lateral</h2>
-                
-                <button id="abrirPopup" class="btn btn-primary">Subir archivos</button>
-                <br><hr>
-                <a href="{{ url_for('tareas') }}" class="btn btn-secondary mb-3">Tareas</a>
-            </div>
+<div class="row">
+    <!-- Barra lateral -->
+    <div class="col-md-2">
+        <div class="sidebar bg-light p-3">
+            <h2 >Lateral</h2>
+            <button id="abrirPopup" class="btn btn-primary mb-3">Subir archivos</button>
+            <a href="{{ url_for('tareas') }}" class="btn btn-secondary d-block">Tareas</a>
         </div>
+    </div>
     
         <!-- Contenido principal -->
         <div class="col-xs-12 col-md-10">
@@ -32,5 +30,5 @@
                 {% endfor %}
             </div>
         </div>
-    </div>
+</div>
     {% endblock %}

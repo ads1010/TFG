@@ -147,7 +147,7 @@ def tareas():
         return redirect(url_for('tareas'))
     
     tareas = Tarea.query.filter_by(propietario_id=current_user.id).all()
-    return render_template('tareas.html', tareas=tareas)
+    return render_template('tareas.html',nombre_usuario=current_user.usuario, tareas=tareas)
 
 
 if __name__ == '__main__':

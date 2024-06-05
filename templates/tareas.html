@@ -3,22 +3,22 @@
 {% block title %}Tareas{% endblock %}
 
 {% block content %}
-<div class="d-flex">
+<div class="row">
     <!-- Barra lateral -->
-    <div class="col-xs-12 col-md-2">
-        <div class="sidebar">
-            <h2>Lateral</h2>
+    <div class="col-md-2">
+        <div class="sidebar bg-light p-3">
+            <h2 >Lateral</h2>
             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#crearTareaForm" aria-expanded="false" aria-controls="crearTareaForm">
                 Crear Nueva Tarea
             </button> <br><hr>
             <a href="{{ url_for('archivos') }}" class="btn btn-secondary mb-3">Archivos</a>
-            
         </div>
     </div>
 
     <!-- Contenido principal -->
     <div class="col-xs-12 col-md-10">
         <div class="content">
+
             <div class="collapse mt-3" id="crearTareaForm">
                 <form method="POST" action="{{ url_for('tareas') }}">
                     <form method="post" action="{{ url_for('tareas') }}">
