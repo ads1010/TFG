@@ -3,28 +3,46 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-xs-12 col-md-6 mb-4">
-            <a href="{{ url_for('archivos') }}" class="card-link">
-                <div class="card text-center h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">Archivos</h5>
-                        <p class="card-text">Administra tus archivos y documentos</p>
-                    </div>
+    <div class="row p-5">
+        <div class="col-md-6 ">
+            <div class="d-flex justify-content-between align-items-center ">
+                <h3>Mis Archivos y Notas</h2>
+                <div>
+                    <button class="btn btn-outline-secondary btn-sm">Subir Archivo</button>
+                    <button class="btn btn-outline-secondary btn-sm">Crear Nota</button>
                 </div>
-            </a>
+            </div>
+            <div class="rounded-lg shadow p-4">
+                {% for archivo in files %}
+                <div class="d-flex justify-content-between align-items-center mb-3 ">
+                    <div>
+                        {{ archivo.nombre }}
+                        <br>
+                        <small>Fecha de subida: {{ archivo.fecha_subida.strftime('%Y-%m-%d') }}</small>
+                    </div>
+                    <form method="POST" action="/delete/{{ archivo }}">
+                        <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
         </div>
-        <div class="col-xs-12 col-md-6 mb-4">
-            <a href="{{ url_for('tareas') }}" class="card-link">
-                <div class="card text-center h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">Tareas</h5>
-                        <p class="card-text">Crea y gestiona tus tareas</p>
+        <div class="col-md-6 ">
+            <div class="d-flex justify-content-between align-items-center ">
+                <h3>Mis Grupos</h2>
+                <button class="btn btn-outline-secondary btn-sm">Crear Grupo</button>
+            </div>
+            <!--<div class="rounded-lg shadow p-4">
+                {% for grupo in groups %}
+                <div class="d-flex justify-content-between align-items-center ">
+                    <div>
+                        <div>{{ grupo.nombre }}</div>
                     </div>
+                    <button class="btn btn-outline-primary btn-sm">Ver</button>
                 </div>
-            </a>
+                {% endfor %}
+            </div>-->
         </div>
     </div>
-</div>
+
 {% endblock %}

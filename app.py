@@ -23,11 +23,11 @@ login_manager.login_view = 'login'  #Redireccion para login requerido
 
 #Lsitado de los directorios 
 def listar_archivos():
-    user_folder = os.path.join(UPLOAD_FOLDER, current_user.usuario)  #Verifcamos las carpetas por cada usuario 
+    """user_folder = os.path.join(UPLOAD_FOLDER, current_user.usuario)  #Verifcamos las carpetas por cada usuario 
     if not os.path.exists(user_folder):
-        os.makedirs(user_folder)
-    return (os.listdir(user_folder))
-
+        os.makedirs(user_folder)"""
+    files = Archivo.query.filter_by(propietario_id=current_user.id).all()
+    return files
 
 # Función para cargar un usuario
 @login_manager.user_loader
@@ -87,7 +87,8 @@ def prueba():
 @app.route('/home', methods=['GET'])
 @login_required
 def inicio():
-    return render_template('home.html')
+    files=listar_archivos()
+    return render_template('home.html', files= files)
 
 # Vista cerrar sesión
 @app.route('/logout')

@@ -19,7 +19,7 @@
                 <h1>Archivos</h1>
                 {% for archivo in files %}
                 <div class="row align-items-center mb-3 mt-3"> 
-                    <div class="col-xs-12 col-md-2">{{ archivo }}</div>                   
+                    <div class="col-xs-12 col-md-2">{{ archivo.nombre }}</div>                   
                     <div class="col-xs-12 col-md-8">
                         <form method="POST" action="/delete/{{ archivo }}">
                             <button type="submit" class="btn btn-outline-danger">Eliminar</button>
