@@ -106,7 +106,7 @@ def archivos():
     return render_template('archivos.html', nombre_usuario=current_user.usuario, files= files)
 
 
-@app.route('/upload',methods=['GET', 'POST'])
+@app.route('/upload',methods=['GET', 'POST'])  #Mantener? Puede ser el post de archivos
 @login_required
 def upload():
     if request.method == 'POST':

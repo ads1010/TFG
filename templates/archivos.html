@@ -8,7 +8,9 @@
     <div class="col-md-2">
         <div class="sidebar bg-light p-3">
             <h2 >Lateral</h2>
-            <button id="abrirPopup" class="btn btn-primary mb-3">Subir archivos</button>
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#subirArchivosForm" aria-expanded="false" aria-controls="subirArchivosForm">
+                Subir archivos
+            </button> <br><hr>
             <a href="{{ url_for('tareas') }}" class="btn btn-secondary d-block">Tareas</a>
         </div>
     </div>
@@ -16,6 +18,15 @@
         <!-- Contenido principal -->
         <div class="col-xs-12 col-md-10">
             <div class="content">  <!-- Configuracion temporal para el contenido, buscando disposicion final-->
+
+                <div class="collapse mt-3" id="subirArchivosForm">
+                    <form method="POST" action="{{ url_for('upload') }}">
+                        <h2>Subir archivos</h2>
+                        <input class="form-control mb-2" type="file" name="file" required>
+                        <button type="submit" class="btn btn-primary">Subir</button>
+                    </form>
+                </div>
+
                 <h1>Archivos</h1>
                 {% for archivo in files %}
                 <div class="row align-items-center mb-3 mt-3"> 
@@ -31,4 +42,5 @@
             </div>
         </div>
 </div>
+
     {% endblock %}
