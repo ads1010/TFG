@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Grupos{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Barra lateral -->
+    <div class="col-md-2">
+        <div class="sidebar bg-light p-3">
+            <h2 >  </h2>
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#crearGruposForm" aria-expanded="false" aria-controls="crearGruposForm">
+                Crear Grupo
+            </button> <br><hr>
+            Miembros
+        </div>
+    </div>
+    
+    <!-- Contenido principal -->
+    <div class="col-xs-12 col-md-10">
+        <div class="content">  <!-- Configuracion temporal para el contenido, buscando disposicion final-->
+
+            <div class="collapse mt-3" id="crearGruposForm">
+                <form method="POST" action="{{ url_for('upload') }}">
+                    <h2>Subir archivos</h2>
+                    <input class="form-control mb-2" type="file" name="file" required>
+                    <button type="submit" class="btn btn-primary">Subir</button>
+                </form>
+            </div>
+
+            <h1>Grupos</h1>
+            <div class="row">
+                {% for grupo in grupos %}
+                <div class="col-md-3 mb-3">
+                    <div class="card shadow-sm p-2">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ grupo.nombre }}</h5>
+                            <p class="card-text">{{ grupo.descripcion }}</p>
+                            <!-- Archivos??-->
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+    {% endblock %}

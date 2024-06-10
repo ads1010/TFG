@@ -30,7 +30,7 @@ class Usuario(db.Model):
 #Donde van a estar construidos los grupos, se genera un ID unico por grupo
 class Grupo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(100), unique=True, nullable=False)
+    nombre = db.Column(db.String(100), nullable=False)
     descripcion = db.Column(db.Text, nullable=True)
     propietario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     usuarios = db.relationship('Usuario', secondary='grupo_usuario', backref='grupos')

@@ -29,6 +29,12 @@ def listar_archivos():
     files = Archivo.query.filter_by(propietario_id=current_user.id).all()
     return files
 
+#Listado de los grupos
+def listar_grupos():
+    grupos = Grupo.query.join(GrupoUsuario, Grupo.id == GrupoUsuario.grupo_id).filter(GrupoUsuario.usuario_id == current_user.id).all() #Consulta Join de Grupo y GurpoUsuario para devolver los grupos que pertenece
+    return grupos
+
+
 # Función para cargar un usuario
 @login_manager.user_loader
 def cargar_usuario(usuario_id):
@@ -149,6 +155,16 @@ def tareas():
     
     tareas = Tarea.query.filter_by(propietario_id=current_user.id).all()
     return render_template('tareas.html',nombre_usuario=current_user.usuario, tareas=tareas)
+
+
+# Vista para ver grupos
+@app.route('/grupos', methods=['GET'])
+@login_required
+def ver_grupos():
+
+
+    grupos = listar_grupos()
+    return render_template('grupos.html', grupos=grupos)
 
 
 if __name__ == '__main__':
