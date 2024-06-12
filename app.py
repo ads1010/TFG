@@ -94,7 +94,8 @@ def prueba():
 @login_required
 def inicio():
     files=listar_archivos()
-    return render_template('home.html', files= files)
+    grupos=listar_grupos()
+    return render_template('home.html', files= files, grupos=grupos)
 
 # Vista cerrar sesión
 @app.route('/logout')
@@ -126,6 +127,7 @@ def upload():
         nuevo_archivo = Archivo(nombre=filename, ruta=os.path.join(user_folder, filename), propietario_id=current_user.id)
         db.session.add(nuevo_archivo)
         db.session.commit()
+        return redirect(url_for('archivos'))
     return render_template('uploadPop.html')
 
 @app.route('/delete/<nombre_archivo>', methods=['POST'])

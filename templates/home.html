@@ -32,16 +32,17 @@
                 <h3>Mis Grupos</h2>
                 <button class="btn btn-outline-secondary btn-sm">Crear Grupo</button>
             </div>
-            <!--<div class="rounded-lg shadow p-4">
-                {% for grupo in groups %}
+            <div class="rounded-lg shadow p-4">
+                {% for grupo in grupos %}
                 <div class="d-flex justify-content-between align-items-center ">
                     <div>
                         <div>{{ grupo.nombre }}</div>
+                        <small>{{grupo.descripcion}}</small>
                     </div>
                     <button class="btn btn-outline-primary btn-sm">Ver</button>
                 </div>
                 {% endfor %}
-            </div>-->
+            </div>
         </div>
     </div>
 
