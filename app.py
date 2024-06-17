@@ -95,7 +95,7 @@ def prueba():
 def inicio():
     files=listar_archivos()
     grupos=listar_grupos()
-    return render_template('home.html', files= files, grupos=grupos)
+    return render_template('home.html',nombre_usuario=current_user.usuario, files= files, grupos=grupos)
 
 # Vista cerrar sesión
 @app.route('/logout')
