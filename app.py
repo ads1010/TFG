@@ -163,10 +163,16 @@ def tareas():
 @app.route('/grupos', methods=['GET'])
 @login_required
 def ver_grupos():
-
-
     grupos = listar_grupos()
     return render_template('grupos.html', grupos=grupos)
+
+@app.route('/grupo/<int:grupo_id>', methods=['GET'])
+@login_required
+def ver_grupo(grupo_id):
+    grupo = Grupo.query.get_or_404(grupo_id)
+    archivos = Archivo.query.filter_by(grupo_id=grupo_id).all()
+    tareas = Tarea.query.filter_by(grupo_id=grupo_id).all()
+    return render_template('grupo.html', grupo=grupo, archivos=archivos, tareas=tareas)
 
 
 if __name__ == '__main__':

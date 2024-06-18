@@ -31,13 +31,15 @@
             <div class="row">
                 {% for grupo in grupos %}
                 <div class="col-md-3 mb-3">
-                    <div class="card shadow-sm p-2">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ grupo.nombre }}</h5>
-                            <p class="card-text">{{ grupo.descripcion }}</p>
-                            <!-- Archivos??-->
+                    <a href="{{ url_for('ver_grupo', grupo_id=grupo.id) }}" class="text-dark">
+                        <div class="card shadow-sm p-2">
+                            <div class="card-body">
+                                <h5 class="card-title ">{{ grupo.nombre }}</h5>
+                                <p class="card-text">{{ grupo.descripcion }}</p>
+                                <!-- Archivos -->
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 {% endfor %}
             </div>

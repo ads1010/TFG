@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ grupo.nombre }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Barra lateral -->
+    <div class="col-md-2">
+        <div class="sidebar bg-light p-3">
+            <a href="{{ url_for('ver_grupos') }}" class="btn btn-secondary">Todos mis grupos</a>
+            <br><hr>
+            <h5>Miembros</h5>
+        </div> 
+        
+    </div>
+    
+    <!-- Contenido principal -->
+    <div class="col-xs-12 col-md-10">
+        <div class="content">
+            <h1>{{ grupo.nombre }}</h2>
+            <p>{{ grupo.descripcion }}</p>
+            <hr><br>
+            <h2>Archivos</h1>
+            <div class="row">
+                {% for archivo in archivos %}
+                <div class="col-md-3 mb-3">
+                    <div class="card shadow-sm p-2">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ archivo.nombre }}</h5>
+
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <h1>Tareas</h1>
+            <div class="row">
+                {% for tarea in tareas %}
+                <div class="col-md-3 mb-3">
+                    <div class="card shadow-sm p-2">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ tarea.titulo }}</h5>
+                            <p class="card-text">{{ tarea.descripcion }}</p>
+                            
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
