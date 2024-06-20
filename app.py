@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from models import Usuario, Archivo, Tarea, Grupo, GrupoUsuario, db
 from werkzeug.utils import secure_filename   #Para evitar nombres de archivo inseguros
@@ -173,6 +173,29 @@ def ver_grupo(grupo_id):
     archivos = Archivo.query.filter_by(grupo_id=grupo_id).all()
     tareas = Tarea.query.filter_by(grupo_id=grupo_id).all()
     return render_template('grupo.html', grupo=grupo, archivos=archivos, tareas=tareas)
+
+
+@app.route('/invitar/<int:grupo_id>', methods=['POST'])
+@login_required
+def invitar_usuario(grupo_id):
+    email = request.form['email']
+    usuario = Usuario.query.filter_by(email=email).first()
+    grupo = Grupo.query.get_or_404(grupo_id)
+
+    if not usuario:
+        flash('El usuario no existe.', 'danger')
+        return redirect(url_for('ver_grupo', grupo_id=grupo_id))
+    
+    if usuario in grupo.usuarios:
+        flash('El usuario es miembro del grupo.', 'warning')
+        return redirect(url_for('ver_grupo', grupo_id=grupo_id))
+
+    nuevo_miembro = GrupoUsuario(usuario_id=usuario.id, grupo_id=grupo.id)
+    db.session.add(nuevo_miembro)
+    db.session.commit()
+    flash('Usuario invitado.', 'success')
+    
+    return redirect(url_for('ver_grupo', grupo_id=grupo_id))
 
 
 if __name__ == '__main__':

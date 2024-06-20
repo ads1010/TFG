@@ -20,6 +20,25 @@
             <h1>{{ grupo.nombre }}</h2>
             <p>{{ grupo.descripcion }}</p>
             <hr><br>
+            
+            <!-- Solo propietario, invitar usuario -->
+            {% if current_user.id == grupo.propietario_id %}
+            <button class="btn btn-primary mb-3" type="button" data-toggle="collapse" data-target="#invitarForm" aria-expanded="false" aria-controls="invitarForm">
+                Invitar a un usuario
+            </button>
+            
+            <div class="collapse" id="invitarForm">
+                <form method="POST" action="{{ url_for('invitar_usuario', grupo_id=grupo.id) }}">
+                    <div class="form-group">
+                        <label for="email">Correo electrónico del usuario</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Enviar invitación</button>
+                </form>
+            </div>
+            <hr>
+            {% endif %}
+
             <h2>Archivos</h1>
             <div class="row">
                 {% for archivo in archivos %}
