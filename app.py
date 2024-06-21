@@ -130,19 +130,18 @@ def upload():
         return redirect(url_for('archivos'))
     return render_template('uploadPop.html')
 
-@app.route('/delete/<nombre_archivo>', methods=['POST'])
+@app.route('/delete/<int:archivo_id>', methods=['POST'])
 @login_required
-def delete_archivo(nombre_archivo):
-    user_folder = os.path.join(UPLOAD_FOLDER, current_user.usuario)
-    archivo = os.path.join(user_folder, nombre_archivo)
-    if os.path.exists(archivo):
-        os.remove(archivo)
-        # Primera forma de elimar en la base de datos 
-        archivo_bd = Archivo.query.filter_by(nombre=nombre_archivo, propietario_id=current_user.id).first()
-        if archivo_bd:
-            db.session.delete(archivo_bd)
-            db.session.commit()
-    return redirect(url_for('archivos'))  # Recargamos la pagina inico
+def delete_archivo(archivo_id):
+    archivo = Archivo.query.get_or_404(archivo_id)
+    archivo_path = archivo.ruta
+    if os.path.exists(archivo_path):
+        os.remove(archivo_path)
+        db.session.delete(archivo)
+        db.session.commit() #Archivo eliminada de BD y ficheros      
+    else:
+        pass
+    return redirect(url_for('archivos'))
 
 @app.route('/tareas', methods=['GET', 'POST'])
 @login_required

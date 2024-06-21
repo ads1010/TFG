@@ -20,7 +20,7 @@
                         <br>
                         <small>Fecha de subida: {{ archivo.fecha_subida.strftime('%Y-%m-%d') }}</small>
                     </div>
-                    <form method="POST" action="/delete/{{ archivo }}">
+                    <form method="POST" action="/delete/{{ archivo.id }}">
                         <button type="submit" class="btn btn-outline-danger">Eliminar</button>
                     </form>
                 </div>
