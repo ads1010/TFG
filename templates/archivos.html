@@ -18,8 +18,8 @@
         <div class="col-xs-12 col-md-10">
             <div class="content">  <!-- Configuracion temporal para el contenido, buscando disposicion final-->
 
-                <div class="collapse mt-3" id="subirArchivosForm">
-                    <form method="POST" action="{{ url_for('upload') }}">
+                <div class="collapse mt-3" id="subirArchivosForm" >
+                    <form method="POST" action="{{ url_for('upload') }}" enctype="multipart/form-data">
                         <h2>Subir archivos</h2>
                         <input class="form-control mb-2" type="file" name="file" required>
                         <button type="submit" class="btn btn-primary">Subir</button>
