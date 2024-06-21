@@ -11,7 +11,9 @@
             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#crearGruposForm" aria-expanded="false" aria-controls="crearGruposForm">
                 Crear Grupo
             </button> <br><hr>
-            Miembros
+            <a href="{{ url_for('archivos') }}" class="btn btn-secondary d-block">Archivos</a>
+            <a href="{{ url_for('tareas') }}" class="btn btn-secondary d-block">Tareas</a>
+            
         </div>
     </div>
     
@@ -20,10 +22,11 @@
         <div class="content">  <!-- Configuracion temporal para el contenido, buscando disposicion final-->
 
             <div class="collapse mt-3" id="crearGruposForm">
-                <form method="POST" action="{{ url_for('upload') }}">
-                    <h2>Subir archivos</h2>
-                    <input class="form-control mb-2" type="file" name="file" required>
-                    <button type="submit" class="btn btn-primary">Subir</button>
+                <form method="POST" action="{{ url_for('crear_grupo') }}">
+                    <h2>Crear Grupo</h2>
+                    <input class="form-control mb-2" type="text" name="nombre" placeholder="Nombre del grupo" required>
+                    <textarea class="form-control mb-2" name="descripcion" placeholder="Descripción del grupo" required></textarea>
+                    <button type="submit" class="btn btn-primary">Crear</button>
                 </form>
             </div>
 

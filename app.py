@@ -165,6 +165,23 @@ def ver_grupos():
     grupos = listar_grupos()
     return render_template('grupos.html', grupos=grupos)
 
+# crear grupo
+@app.route('/crear_grupo', methods=['POST'])
+@login_required
+def crear_grupo():
+    nombre = request.form['nombre']
+    descripcion = request.form['descripcion']
+    nuevo_grupo = Grupo(nombre=nombre, descripcion=descripcion, propietario_id=current_user.id)
+    db.session.add(nuevo_grupo)
+    db.session.commit()
+
+    # tine que ser miembro del propio grupo
+    grupo_usuario = GrupoUsuario(usuario_id=current_user.id, grupo_id=nuevo_grupo.id)
+    db.session.add(grupo_usuario)
+    db.session.commit()
+    return redirect(url_for('ver_grupos'))
+
+
 @app.route('/grupo/<int:grupo_id>', methods=['GET'])
 @login_required
 def ver_grupo(grupo_id):
