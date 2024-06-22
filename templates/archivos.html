@@ -27,19 +27,67 @@
                 </div>
 
                 <h1>Archivos</h1>
-                {% for archivo in files %}
-                <div class="row align-items-center mb-3 mt-3"> 
-                    <div class="col-xs-12 col-md-2">{{ archivo.nombre }}</div>                   
-                    <div class="col-xs-12 col-md-8">
-                        <form method="POST" action="/delete/{{ archivo.id }}">
-                            <button type="submit" class="btn btn-outline-danger">Eliminar</button>
-                        </form>
+                <div class="row align-items-center mb-3 mt-3">
+                    {% for archivo in files %}
+                    <div class="col-md-4 mb-3">
+                        <div class="card shadow-sm p-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="card-title h5">{{ archivo.nombre }}</div>
+                                <!-- <div class="btn-group">-->
+                                    <form method="POST" action="/delete/{{ archivo.id }}" class="mr-1">
+                                        <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+                                    </form>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#asignarGrupo{{ archivo.id }}">
+                                        Compartir
+                                    </button>
+                                <!-- </div>-->
+                            </div>
+                        </div>
                     </div>
+    
+                    
+                    <hr class="my-1"> 
+                    <!-- Modal -->
+                    <div class="modal fade" id="asignarGrupo{{ archivo.id }}"  role="dialog" >
+                        <div class="modal-dialog" >
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Asignar grupo</h5>
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <span >&times;</span>
+                                    </button>
+                                </div>
+                                <form method="POST" action="{{ url_for('compartir_archivo_grupo') }}">
+                                    <div class="modal-body">
+                                        <input type="hidden" name="archivo_id" value="{{ archivo.id }}">
+                                        {{archivo.id}}
+                                        <div class="form-group">
+                                            <label for="grupo_id">Seleccionar Grupo</label>
+                                            <select class="form-control" name="grupo_id" id="grupo_id" required>
+                                                <option value="" disabled selected>Seleccionar Grupo</option>
+                                                {% for grupo in grupos %}
+                                                    <option value="{{ grupo.id }}">{{ grupo.nombre }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-primary">Guardar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
-                <hr class="my-1"> 
-                {% endfor %}
             </div>
+
+            
         </div>
+   
 </div>
+
+
 
     {% endblock %}

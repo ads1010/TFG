@@ -110,7 +110,8 @@ def logout():
 def archivos():
     # Pasa el usuario conectado 
     files=listar_archivos()
-    return render_template('archivos.html', nombre_usuario=current_user.usuario, files= files)
+    grupos=listar_grupos()
+    return render_template('archivos.html', nombre_usuario=current_user.usuario, files= files, grupos= grupos)
 
 
 @app.route('/upload',methods=['GET', 'POST'])  #Mantener? Puede ser el post de archivos
@@ -141,6 +142,20 @@ def delete_archivo(archivo_id):
         db.session.commit() #Archivo eliminada de BD y ficheros      
     else:
         pass
+    return redirect(url_for('archivos'))
+
+@app.route('/compartir_archivo_grupo', methods=['POST'])
+@login_required
+def compartir_archivo_grupo():
+    archivo_id = request.form['archivo_id']
+    grupo_id = request.form['grupo_id']
+    
+    archivo = Archivo.query.get_or_404(archivo_id)
+    grupo = Grupo.query.get_or_404(grupo_id)
+    
+    archivo.grupo_id = grupo.id
+    db.session.commit()
+    
     return redirect(url_for('archivos'))
 
 @app.route('/tareas', methods=['GET', 'POST'])
