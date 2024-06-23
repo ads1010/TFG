@@ -33,7 +33,9 @@ class Grupo(db.Model):
     nombre = db.Column(db.String(100), nullable=False)
     descripcion = db.Column(db.Text, nullable=True)
     propietario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
-    usuarios = db.relationship('Usuario', secondary='grupo_usuario', backref='grupos')
+    usuarios = db.relationship('Usuario', secondary='grupo_usuario', backref='grupo')
+    
+    
 
 #Relacion de los usuarios con los grupos a los que pertenecen
 class GrupoUsuario(db.Model):
@@ -48,14 +50,13 @@ class Archivo(db.Model):
     nombre = db.Column(db.String(255), nullable=False)
     ruta = db.Column(db.String(255), nullable=False)
     propietario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
-    grupo_id = db.Column(db.Integer, db.ForeignKey('grupo.id'), nullable=True)
-    fecha_subida = db.Column(db.DateTime, nullable=False, default=datetime.utcnow) #Se trabaja directamente aqui por lo que no es necesario introducirlo al crear el Archivo
+    fecha_subida = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    grupos = db.relationship('Grupo', secondary='archivo_grupo', backref='archivos')
 
-
-class CompartirArchivo(db.Model):  #Necesario ahora que se utilizan grupos ?
+class ArchivoGrupo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     archivo_id = db.Column(db.Integer, db.ForeignKey('archivo.id'), nullable=False)
-    usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    grupo_id = db.Column(db.Integer, db.ForeignKey('grupo.id'), nullable=False)
 
 
 class Tarea(db.Model):
@@ -63,10 +64,10 @@ class Tarea(db.Model):
     titulo = db.Column(db.String(255), nullable=False)
     descripcion = db.Column(db.Text, nullable=False)
     propietario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
-    grupo_id = db.Column(db.Integer, db.ForeignKey('grupo.id'), nullable=True)
     fecha_creacion = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    grupos = db.relationship('Grupo', secondary='tarea_grupo', backref='tareas')
 
-class CompartirTarea(db.Model): #Necesario ahora que se utilizan grupos ?
+class TareaGrupo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     tarea_id = db.Column(db.Integer, db.ForeignKey('tarea.id'), nullable=False)
-    usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    grupo_id = db.Column(db.Integer, db.ForeignKey('grupo.id'), nullable=False)

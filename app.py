@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
-from models import Usuario, Archivo, Tarea, Grupo, GrupoUsuario, db
+from models import Usuario, Archivo, Tarea, Grupo, GrupoUsuario, ArchivoGrupo, TareaGrupo, db
 from werkzeug.utils import secure_filename   #Para evitar nombres de archivo inseguros
 import os
 
@@ -153,9 +153,16 @@ def compartir_archivo_grupo():
     archivo = Archivo.query.get_or_404(archivo_id)
     grupo = Grupo.query.get_or_404(grupo_id)
     
-    archivo.grupo_id = grupo.id
-    db.session.commit()
-    
+
+    archivo_grupo_existente = ArchivoGrupo.query.filter_by(archivo_id=archivo.id, grupo_id=grupo.id).first()
+    if archivo_grupo_existente:
+        flash('Esate archivo ya esta disponible en este grupo.', 'warning')
+    else:
+        #Guardamos que el archivo pertener al grupo en la tabla 
+        nueva_asociacion = ArchivoGrupo(archivo_id=archivo.id, grupo_id=grupo.id)
+        db.session.add(nueva_asociacion)
+        db.session.commit()
+
     return redirect(url_for('archivos'))
 
 @app.route('/tareas', methods=['GET', 'POST'])
@@ -201,8 +208,8 @@ def crear_grupo():
 @login_required
 def ver_grupo(grupo_id):
     grupo = Grupo.query.get_or_404(grupo_id)
-    archivos = Archivo.query.filter_by(grupo_id=grupo_id).all()
-    tareas = Tarea.query.filter_by(grupo_id=grupo_id).all()
+    archivos = grupo.archivos  
+    tareas = grupo.tareas  
     return render_template('grupo.html', grupo=grupo, archivos=archivos, tareas=tareas)
 
 
