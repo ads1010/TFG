@@ -10,6 +10,11 @@
             <a href="{{ url_for('ver_grupos') }}" class="btn btn-secondary">Todos mis grupos</a>
             <br><hr>
             <h5>Miembros</h5>
+            <ul class="list-group">
+                {% for miembro in miembros %}
+                <li class="list-group-item">{{ miembro.usuario }}</li>
+                {% endfor %}
+            </ul>
         </div> 
         
     </div>
@@ -19,22 +24,28 @@
         <div class="content">
             <h1>{{ grupo.nombre }}</h2>
             <p>{{ grupo.descripcion }}</p>
-            <hr><br>
+            <hr>
             
             <!-- Solo propietario, invitar usuario -->
+            <!-- Solo propietario, sección de administración -->
             {% if current_user.id == grupo.propietario_id %}
-            <button class="btn btn-primary mb-3" type="button" data-toggle="collapse" data-target="#invitarForm" aria-expanded="false" aria-controls="invitarForm">
-                Invitar a un usuario
-            </button>
-            
-            <div class="collapse" id="invitarForm">
-                <form method="POST" action="{{ url_for('invitar_usuario', grupo_id=grupo.id) }}">
-                    <div class="form-group">
-                        <label for="email">Correo electrónico del usuario</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Enviar invitación</button>
-                </form>
+            <div class="admin-section bg-light p-3 mb-3">
+                <h5>Administración del Grupo</h5>
+                <button class="btn btn-primary mb-2" type="button" data-toggle="collapse" data-target="#invitarForm" aria-expanded="false" aria-controls="invitarForm">
+                    Invitar a un usuario
+                </button>
+                <div class="collapse mb-2" id="invitarForm">
+                    <form method="POST" action="{{ url_for('invitar_usuario', grupo_id=grupo.id) }}">
+                        <div class="form-group">
+                            <label for="email">Correo electrónico del usuario</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Enviar invitación</button>
+                    </form>
+                </div>
+                
+                <button class="btn btn-danger mb-2">Eliminar usuario</button>
+                <button class="btn btn-danger mb-2">Borrar grupo</button>
             </div>
             <hr>
             {% endif %}

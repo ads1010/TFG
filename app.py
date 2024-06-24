@@ -210,7 +210,8 @@ def ver_grupo(grupo_id):
     grupo = Grupo.query.get_or_404(grupo_id)
     archivos = grupo.archivos  
     tareas = grupo.tareas  
-    return render_template('grupo.html', grupo=grupo, archivos=archivos, tareas=tareas)
+    miembros = Usuario.query.join(GrupoUsuario).filter(GrupoUsuario.grupo_id == grupo_id).all()
+    return render_template('grupo.html', grupo=grupo, archivos=archivos, tareas=tareas, miembros=miembros)
 
 
 @app.route('/invitar/<int:grupo_id>', methods=['POST'])
