@@ -87,7 +87,7 @@ def registro():
 @app.route('/')
 @login_required
 def prueba():
-    return f'Bienvenido, {current_user.usuario}! <a href="/logout">Cerrar sesión</a>'
+    return redirect(url_for('inicio'))
 
 
 @app.route('/home', methods=['GET'])
