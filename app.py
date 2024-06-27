@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from models import Usuario, Archivo, Tarea, Grupo, GrupoUsuario, ArchivoGrupo, TareaGrupo, db
 from werkzeug.utils import secure_filename   #Para evitar nombres de archivo inseguros
+from werkzeug.security import generate_password_hash, check_password_hash
 import os
 
 
@@ -49,7 +50,7 @@ def login():
         contraseña = request.form['contraseña']
         
         usuario_existente = Usuario.query.filter_by(email = email).first()
-        if usuario_existente and usuario_existente.contraseña == contraseña:
+        if usuario_existente and check_password_hash(usuario_existente.contraseña, contraseña):
             login_user(usuario_existente)
             return redirect(url_for('inicio'))
         else:# Si el usuario no existe
@@ -73,7 +74,8 @@ def registro():
             return render_template('registro.html', mensaje=mensaje)
         else:
             # Crea un nuevo usuario
-            nuevo_usuario = Usuario(usuario=usuario,email=email,contraseña=contraseña)
+            contraseña_hash = generate_password_hash(contraseña)
+            nuevo_usuario = Usuario(usuario=usuario, email=email, contraseña=contraseña_hash)
             db.session.add(nuevo_usuario)
             db.session.commit()
             
