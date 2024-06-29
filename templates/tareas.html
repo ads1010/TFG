@@ -39,9 +39,12 @@
                     <h5>{{ tarea.titulo }}</h5>
                     <p>{{ tarea.descripcion }}</p>
                 </div>
-                <div class="col-xs-12 col-md-2 text-right">
-                    <a href="" class="btn btn-info mb-2">Compartir</a>
-                </div>
+                <form method="POST" action="{{ url_for('delete_tarea', tarea_id=tarea.id) }}" class="mr-1">
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+                <button type="button" class="btn btn-primary">
+                    Compartir
+                </button>
             </div>
             <hr class="my-1">
             {% endfor %}

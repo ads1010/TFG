@@ -141,7 +141,8 @@ def delete_archivo(archivo_id):
     if os.path.exists(archivo_path):
         os.remove(archivo_path)
         db.session.delete(archivo)
-        db.session.commit() #Archivo eliminada de BD y ficheros      
+        db.session.commit() #Archivo eliminada de BD y ficheros     
+        flash('Archivo eliminado.', 'success') 
     else:
         pass
     return redirect(url_for('archivos'))
@@ -181,6 +182,17 @@ def tareas():
     tareas = Tarea.query.filter_by(propietario_id=current_user.id).all()
     return render_template('tareas.html',nombre_usuario=current_user.usuario, tareas=tareas)
 
+@app.route('/deletetarea/<int:tarea_id>', methods=['POST'])
+@login_required
+def delete_tarea(tarea_id):
+    tarea = Tarea.query.get_or_404(tarea_id)
+    if tarea.propietario_id == current_user.id:
+        db.session.delete(tarea)
+        db.session.commit()
+        flash('Tarea eliminada.', 'success')
+    else:
+        pass
+    return redirect(url_for('tareas'))
 
 # Vista para ver grupos
 @app.route('/grupos', methods=['GET'])
