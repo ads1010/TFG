@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for,send_file, flash
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from models import Usuario, Archivo, Tarea, Grupo, GrupoUsuario, ArchivoGrupo, TareaGrupo, db
 from werkzeug.utils import secure_filename   #Para evitar nombres de archivo inseguros
@@ -146,6 +146,18 @@ def delete_archivo(archivo_id):
     else:
         pass
     return redirect(url_for('archivos'))
+
+@app.route('/descargar/<int:archivo_id>', methods=['GET'])
+@login_required
+def descargar_archivo(archivo_id):
+    archivo = Archivo.query.get_or_404(archivo_id)
+    archivo_path = archivo.ruta
+
+    if os.path.exists(archivo_path):
+        return send_file(archivo_path, as_attachment=True)
+    else:
+        flash('El archivo no existe.', 'danger')
+        return redirect(url_for('archivos'))
 
 @app.route('/compartir_archivo_grupo', methods=['POST'])
 @login_required
