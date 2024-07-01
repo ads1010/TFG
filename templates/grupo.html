@@ -30,8 +30,8 @@
             {% if current_user.id == grupo.propietario_id %}
             <div class="admin-section bg-light p-3 mb-3">
                 <h5>Administración del Grupo</h5>
-
-                <button class="btn btn-primary mb-2" type="button" data-toggle="collapse" data-target="#invitarForm" aria-expanded="false" aria-controls="invitarForm">
+                
+                <button class="btn btn-primary mb-2 mr-1" type="button" data-toggle="collapse" data-target="#invitarForm" aria-expanded="false" aria-controls="invitarForm">
                     Invitar a un usuario
                 </button>
                 <div class="collapse mb-2" id="invitarForm">
@@ -44,9 +44,7 @@
                     </form>
                 </div>
                 
-               
-
-                <button class="btn btn-danger mb-2" type="button" data-toggle="collapse" data-target="#eliminarForm" aria-expanded="false" aria-controls="eliminarForm">
+                <button class="btn btn-danger mb-2 mr-1" type="button" data-toggle="collapse" data-target="#eliminarForm" aria-expanded="false" aria-controls="eliminarForm">
                     Eliminar usuario
                 </button>
                 <div class="collapse mb-2" id="eliminarForm">
@@ -62,11 +60,12 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-danger">Eliminar usuario</button>
+                        <button type="submit" class="btn btn-danger">Confirmar</button>
                     </form>
-                </div>
-
-                <button class="btn btn-danger mb-2">Borrar grupo</button>
+                </div>  
+                <form method="POST" action="/delete_grupo/{{ grupo.id }}" class="d-inline mr-1">
+                    <button type="submit" class="btn btn-outline-danger mb-2 mr-1">Eliminar grupo</button>
+                </form>       
             </div>
             <hr>
             {% endif %}

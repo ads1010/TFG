@@ -22,16 +22,23 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'  #Redireccion para login requerido
 
 
-#Lsitado de los directorios 
+
 def listar_archivos():
-    """user_folder = os.path.join(UPLOAD_FOLDER, current_user.usuario)  #Verifcamos las carpetas por cada usuario 
-    if not os.path.exists(user_folder):
-        os.makedirs(user_folder)"""
+    """
+   Devuelve todos los archivos del usuario actual
+    Returns:
+        List[Archivo]: Lista de objetos `Archivo` del usuario actual.
+    """
     files = Archivo.query.filter_by(propietario_id=current_user.id).all()
     return files
 
-#Listado de los grupos
+
 def listar_grupos():
+    """
+    Devuelve todos los grupos del usuario actual.
+    Returns:
+        List[Grupo]: Lista de objetos `Grupo` a los que pertenece el usuario actual.
+    """
     grupos = Grupo.query.join(GrupoUsuario, Grupo.id == GrupoUsuario.grupo_id).filter(GrupoUsuario.usuario_id == current_user.id).all() #Consulta Join de Grupo y GurpoUsuario para devolver los grupos que pertenece
     return grupos
 
@@ -42,9 +49,14 @@ def cargar_usuario(usuario_id):
     return Usuario.query.get(int(usuario_id))
 
 
-# Vista inicio de sesión
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    """
+    Vista del inicio de sesión de un usuario.
+    Returns:
+        render_template: Renderiza el template 'login.html'.
+    """
     if request.method == 'POST':
         email = request.form['email']
         contraseña = request.form['contraseña']
@@ -59,9 +71,14 @@ def login():
     
     return render_template('login.html')
 
-# Vista registro
+
 @app.route('/registro', methods=['GET', 'POST'])
 def registro():
+    """
+    Vista para el registro de un nuevo usuario.
+    Returns:
+        render_template: Renderiza el template 'registro.html'.
+    """
     if request.method == 'POST':
         usuario = request.form['usuario']
         email = request.form['email']
@@ -239,6 +256,17 @@ def ver_grupo(grupo_id):
     miembros = Usuario.query.join(GrupoUsuario).filter(GrupoUsuario.grupo_id == grupo_id).all()
     return render_template('grupo.html', grupo=grupo, archivos=archivos, tareas=tareas, miembros=miembros)
 
+@app.route('/delete_grupo/<int:grupo_id>', methods=['POST'])
+@login_required
+def delete_grupo(grupo_id):
+    grupo = Grupo.query.get_or_404(grupo_id)
+    if grupo.propietario_id == current_user.id:
+        db.session.delete(grupo)
+        db.session.commit()
+        flash('Grupo eliminado.', 'eliminado')
+    else:
+        pass
+    return redirect(url_for('ver_grupos'))
 
 @app.route('/invitar/<int:grupo_id>', methods=['POST'])
 @login_required
