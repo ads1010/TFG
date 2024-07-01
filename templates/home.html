@@ -42,7 +42,7 @@
                         <div>{{ grupo.nombre }}</div>
                         <small>{{grupo.descripcion}}</small>
                     </div>
-                    <button class="btn btn-outline-primary btn-sm">Ver</button>
+                    <button class="btn btn-outline-primary btn-sm" onclick="window.location.href='/grupo/{{ grupo.id }}'">Ver</button>
                 </div>
                 {% endfor %}
                 <div class="mt-4">

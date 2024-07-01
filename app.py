@@ -228,7 +228,7 @@ def delete_tarea(tarea_id):
 @login_required
 def ver_grupos():
     grupos = listar_grupos()
-    return render_template('grupos.html', grupos=grupos)
+    return render_template('grupos.html', nombre_usuario=current_user.usuario, grupos=grupos)
 
 # crear grupo
 @app.route('/crear_grupo', methods=['POST'])
