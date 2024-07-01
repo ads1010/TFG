@@ -262,6 +262,22 @@ def invitar_usuario(grupo_id):
     
     return redirect(url_for('ver_grupo', grupo_id=grupo_id))
 
+@app.route('/eliminar_miembro/<int:grupo_id>', methods=['POST'])
+@login_required
+def eliminar_miembro(grupo_id):
+    grupo = Grupo.query.get_or_404(grupo_id)
+    usuario_id = request.form['usuario_id']
+    grupo_usuario = GrupoUsuario.query.filter_by(grupo_id=grupo_id, usuario_id=usuario_id).first()  
+
+    if grupo_usuario:
+        db.session.delete(grupo_usuario)
+        db.session.commit()
+        flash('Usuario eliminado del grupo.', 'success')
+    else:
+        flash('El usuario no pertenece al grupo.', 'warning')
+    
+    return redirect(url_for('ver_grupo', grupo_id=grupo_id))
+
 
 if __name__ == '__main__':
     with app.app_context():
