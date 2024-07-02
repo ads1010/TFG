@@ -150,6 +150,15 @@ def archivos():
 @app.route('/upload',methods=['GET', 'POST'])  #Mantener? Puede ser el post de archivos
 @login_required
 def upload():
+    """
+    Vista para subir archivos.
+    Methods:
+        GET: Muestra el formulario para subir archivos. 
+        POST: Maneja la subida de archivos, los guarda en el servidor y en la base de datos.
+    Returns:
+        render_template: Renderiza el template 'uploadPop.html' para mostrar el formulario de subida de archivos.
+        redirect: Redirige a la vista de archivos.
+    """
     if request.method == 'POST':
         file = request.files['file']
         filename = secure_filename(file.filename)
@@ -167,6 +176,13 @@ def upload():
 @app.route('/delete/<int:archivo_id>', methods=['POST'])
 @login_required
 def delete_archivo(archivo_id):
+    """
+    Vista para eliminar un archivo.
+    Args:
+        archivo_id (int): ID del archivo a eliminar.
+    Returns:
+        redirect: Redirige a la vista de archivos después de eliminar el archivo.
+    """
     archivo = Archivo.query.get_or_404(archivo_id)
     archivo_path = archivo.ruta
     if os.path.exists(archivo_path):
@@ -181,6 +197,14 @@ def delete_archivo(archivo_id):
 @app.route('/descargar/<int:archivo_id>', methods=['GET'])
 @login_required
 def descargar_archivo(archivo_id):
+    """
+    Vista para descargar un archivo.
+    Args:
+        archivo_id (int): ID del archivo a descargar.
+    Returns:
+        send_file: Descarga el archivo en el navegador del usuario.
+        redirect: Redirige a la vista de archivos con un mensaje de error si el archivo no existe.
+    """
     archivo = Archivo.query.get_or_404(archivo_id)
     archivo_path = archivo.ruta
 
@@ -223,7 +247,8 @@ def tareas():
         return redirect(url_for('tareas'))
     
     tareas = Tarea.query.filter_by(propietario_id=current_user.id).all()
-    return render_template('tareas.html',nombre_usuario=current_user.usuario, tareas=tareas)
+    grupos=listar_grupos()
+    return render_template('tareas.html',nombre_usuario=current_user.usuario, tareas=tareas, grupos=grupos)
 
 @app.route('/deletetarea/<int:tarea_id>', methods=['POST'])
 @login_required
@@ -248,6 +273,24 @@ def editar_tarea(tarea_id):
         flash('Tarea actualizada.', 'success')
     else:
         pass
+    return redirect(url_for('tareas'))
+
+@app.route('/compartir_tarea_grupo', methods=['POST'])
+@login_required
+def compartir_tarea_grupo():
+    tarea_id = request.form['tarea_id']
+    grupo_id = request.form['grupo_id']
+    
+    tarea = Tarea.query.get_or_404(tarea_id)
+    grupo = Grupo.query.get_or_404(grupo_id)
+    
+    tarea_grupo_existente = TareaGrupo.query.filter_by(tarea_id=tarea.id, grupo_id=grupo.id).first()
+    if tarea_grupo_existente:
+        flash('Esta Tarea ya esta disponible en este grupo.', 'warning')
+    else:
+        nueva_asociacion = TareaGrupo(tarea_id=tarea.id, grupo_id=grupo.id)
+        db.session.add(nueva_asociacion)
+        db.session.commit()
     return redirect(url_for('tareas'))
 
 # Vista para ver grupos

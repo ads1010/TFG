@@ -40,7 +40,7 @@
                                     </a>
                                 </div>
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-primary mr-1" data-toggle="modal" data-target="#asignarGrupo{{ archivo.id }}">
+                                    <button  class="btn btn-primary mr-1" type="button" data-toggle="modal" data-target="#asignarGrupo{{ archivo.id }}">
                                         Compartir
                                     </button>
                                     <form method="POST" action="/delete/{{ archivo.id }}" class="mr-1">
@@ -66,7 +66,6 @@
                                 <form method="POST" action="{{ url_for('compartir_archivo_grupo') }}">
                                     <div class="modal-body">
                                         <input type="hidden" name="archivo_id" value="{{ archivo.id }}">
-                                        {{archivo.id}}
                                         <div class="form-group">
                                             <label for="grupo_id">Seleccionar Grupo</label>
                                             <select class="form-control" name="grupo_id" id="grupo_id" required>
