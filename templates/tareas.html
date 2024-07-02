@@ -23,29 +23,40 @@
 
             <div class="collapse mt-3" id="crearTareaForm">
                 <form method="POST" action="{{ url_for('tareas') }}">
-                    <form method="post" action="{{ url_for('tareas') }}">
-                        <h2>Nueva Tarea</h2>
-                        <input class="form-control mb-2" type="text" id="titulo" name="titulo" placeholder="Título" required>
-                        <textarea class="form-control mb-2" id="descripcion" name="descripcion" placeholder="Descripción" rows="2" required></textarea>
-                        <input type="submit" class="btn btn-primary" value="Agregar Tarea">
-                        <hr class="my-1">
-                    </form>
+                    <h2>Nueva Tarea</h2>
+                    <input class="form-control mb-2" type="text" id="titulo" name="titulo" placeholder="Título" required>
+                    <textarea class="form-control mb-2" id="descripcion" name="descripcion" placeholder="Descripción" rows="2" required></textarea>
+                    <button type="submit" class="btn btn-primary">Agregar Tarea</button>
+                    <hr class="my-1">
+                </form>
             </div>
 
             <h2>Lista de Tareas</h2>
             {% for tarea in tareas %}
             <div class="row align-items-center mb-3 mt-3">
-                <div class="col-xs-12 col-md-10">
+                <div class="col-xs-12 col-md-9">
                     <h5>{{ tarea.titulo }}</h5>
                     <p>{{ tarea.descripcion }}</p>
                 </div>
-                <form method="POST" action="{{ url_for('delete_tarea', tarea_id=tarea.id) }}" class="mr-1">
-                    <button type="submit" class="btn btn-danger">Eliminar</button>
-                </form>
-                <button type="button" class="btn btn-primary">
-                    Compartir
-                </button>
+                <div class="col-xs-12 col-md-3 text-right">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#editForm{{ tarea.id }}" aria-expanded="false" aria-controls="editForm{{ tarea.id }}">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
+                    <form method="POST" action="{{ url_for('delete_tarea', tarea_id=tarea.id) }}" class="d-inline">
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                    <button type="submit" class="btn btn-primary">Compartir</button>
+                </div>
             </div>
+
+            <div class="collapse" id="editForm{{ tarea.id }}">
+                <form method="POST" action="{{ url_for('editar_tarea', tarea_id=tarea.id) }}">
+                    <input class="form-control mb-2" type="text"  id="titulo{{ tarea.id }}" name="titulo" value="{{ tarea.titulo }}" required>
+                    <textarea class="form-control mb-2" id="descripcion{{ tarea.id }}" name="descripcion" rows="2" required>{{ tarea.descripcion }}</textarea>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </form>                
+            </div>
+
             <hr class="my-1">
             {% endfor %}
         </div>

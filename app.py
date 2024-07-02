@@ -112,14 +112,24 @@ def prueba():
 @app.route('/home', methods=['GET'])
 @login_required
 def inicio():
+    """
+    Vista principal del home del usuario.
+    Returns:
+        render_template: Renderiza el template 'home.html' con los archivos y grupos del usuario actual.
+    """
     files=listar_archivos()
     grupos=listar_grupos()
     return render_template('home.html',nombre_usuario=current_user.usuario, files= files, grupos=grupos)
 
-# Vista cerrar sesión
+
 @app.route('/logout')
 @login_required
 def logout():
+    """
+    Vista para cerrar la sesión del usuario.
+    Returns:
+        redirect: Redirige a la página de inicio de sesión.
+    """
     logout_user()
     return redirect(url_for('login'))
 
@@ -127,7 +137,11 @@ def logout():
 @app.route('/archivos',methods=['GET'])
 @login_required
 def archivos():
-    # Pasa el usuario conectado 
+    """
+    Vista principal de  los archivos del usuario
+    Returns:
+        render_template: Renderiza el template 'archivos.html' con los archivos y grupos del usuario.
+    """
     files=listar_archivos()
     grupos=listar_grupos()
     return render_template('archivos.html', nombre_usuario=current_user.usuario, files= files, grupos= grupos)
@@ -219,6 +233,19 @@ def delete_tarea(tarea_id):
         db.session.delete(tarea)
         db.session.commit()
         flash('Tarea eliminada.', 'success')
+    else:
+        pass
+    return redirect(url_for('tareas'))
+
+@app.route('/editartarea/<int:tarea_id>', methods=['POST'])
+@login_required
+def editar_tarea(tarea_id):
+    tarea = Tarea.query.get_or_404(tarea_id)
+    if tarea.propietario_id == current_user.id:
+        tarea.titulo = request.form['titulo']
+        tarea.descripcion = request.form['descripcion']
+        db.session.commit()
+        flash('Tarea actualizada.', 'success')
     else:
         pass
     return redirect(url_for('tareas'))
