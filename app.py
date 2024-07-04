@@ -338,6 +338,19 @@ def delete_grupo(grupo_id):
         pass
     return redirect(url_for('ver_grupos'))
 
+@app.route('/editargrupo/<int:grupo_id>', methods=['POST'])
+@login_required
+def editar_grupo(grupo_id):
+    grupo = Grupo.query.get_or_404(grupo_id)
+    if grupo.propietario_id == current_user.id:
+        grupo.nombre = request.form['nombre']
+        grupo.descripcion = request.form['descripcion']
+        db.session.commit()
+        flash('Grupo actualizada.', 'success')
+    else:
+        pass
+    return redirect(url_for('ver_grupos'))
+
 @app.route('/invitar/<int:grupo_id>', methods=['POST'])
 @login_required
 def invitar_usuario(grupo_id):

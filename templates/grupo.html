@@ -23,7 +23,21 @@
     <div class="col-xs-12 col-md-10">
         <div class="content">
             <h1>{{ grupo.nombre }}</h2>
-            <p>{{ grupo.descripcion }}</p>
+            <p>{{ grupo.descripcion }}
+            {% if current_user.id == grupo.propietario_id %}
+            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#editGrupo{{ grupo.id }}" aria-expanded="false" aria-controls="editGrupo{{ grupo.id }}">
+                <i class="fas fa-pencil-alt"></i>
+            {% endif %}
+            </button></p>
+
+            <div class="collapse" id="editGrupo{{ grupo.id }}">
+                <form method="POST" action="{{ url_for('editar_grupo', grupo_id=grupo.id) }}">
+                    <input class="form-control mb-2" type="text"  id="nombre{{ grupo.id }}" name="nombre" value="{{ grupo.nombre }}" required>
+                    <textarea class="form-control mb-2" id="descripcion{{ grupo.id }}" name="descripcion" rows="2" required>{{ grupo.descripcion }}</textarea>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </form>                
+            </div>
+
             <hr>
             
             <!-- Solo propietario, invitar usuario -->
