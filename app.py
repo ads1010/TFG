@@ -48,6 +48,11 @@ def listar_grupos():
 def cargar_usuario(usuario_id):
     return Usuario.query.get(int(usuario_id))
 
+@app.errorhandler(404)
+def page_not_found(error):
+    flash('Error 404, algun recurso no existe', 'danger')
+    return redirect(url_for('inicio'))
+
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -144,7 +149,7 @@ def archivos():
     """
     Vista principal de  los archivos del usuario
     Returns:
-        render_template: Renderiza el template 'archivos.html' con los archivos y grupos del usuario.
+        render_template: Renderiza el template 'archivos.html' con los archivos del usuario.
     """
     files=listar_archivos()
     grupos=listar_grupos()
@@ -215,13 +220,19 @@ def descargar_archivo(archivo_id):
         redirect: Redirige a la vista de archivos con un mensaje de error si el archivo no existe.
     """
     archivo = Archivo.query.get_or_404(archivo_id)
-    archivo_path = archivo.ruta
-
-    if os.path.exists(archivo_path):
-        return send_file(archivo_path, as_attachment=True)
+    #Verficiar que el usuario tenga disponible el archivo
+    if archivo.propietario_id == current_user.id or ArchivoGrupo.query.filter_by(archivo_id=archivo.id).join(Grupo).join(GrupoUsuario).filter_by(usuario_id=current_user.id).all():
+        archivo_path = archivo.ruta
+        if os.path.exists(archivo_path):
+            return send_file(archivo_path, as_attachment=True)
+        else:
+            flash('El archivo no existe.', 'danger')
+            return redirect(url_for('archivos'))
     else:
-        flash('El archivo no existe.', 'danger')
-        return redirect(url_for('archivos'))
+        flash('No tienes permiso para descargar este archivo.', 'danger')
+        return redirect(url_for('inicio'))
+    return redirect(url_for('archivos'))
+
 
 @app.route('/compartir_archivo_grupo', methods=['POST'])
 @login_required
@@ -405,6 +416,11 @@ def descompartir_tarea_grupo(tarea_id, grupo_id):
 @app.route('/grupos', methods=['GET'])
 @login_required
 def ver_grupos():
+    """
+    Vista principal de  los grupos del usuario
+    Returns:
+        render_template: Renderiza el template 'grupos.html' con los grupos del usuario.
+    """
     grupos = listar_grupos()
     return render_template('grupos.html', nombre_usuario=current_user.usuario, grupos=grupos)
 
