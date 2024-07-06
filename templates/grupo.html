@@ -46,7 +46,7 @@
                 <h5 data-toggle="collapse" data-target="#adminContent" style="cursor: pointer;">Administración del Grupo</h5>
                 <div class="collapse" id="adminContent">
                     <button class="btn btn-primary mb-2 mr-1" type="button" data-toggle="collapse" data-target="#invitarForm" aria-expanded="false" aria-controls="invitarForm">
-                        Invitar a un usuario
+                        Invitar usuario
                     </button>
                     <div class="collapse mb-2" id="invitarForm">
                         <form method="POST" action="{{ url_for('invitar_usuario', grupo_id=grupo.id) }}">
