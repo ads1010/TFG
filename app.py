@@ -460,7 +460,7 @@ def ver_grupo(grupo_id):
     archivos = grupo.archivos  
     tareas = grupo.tareas  
     miembros = Usuario.query.join(GrupoUsuario).filter(GrupoUsuario.grupo_id == grupo_id).all()
-    return render_template('grupo.html', grupo=grupo, archivos=archivos, tareas=tareas, miembros=miembros)
+    return render_template('grupo.html', nombre_usuario=current_user.usuario, grupo=grupo, archivos=archivos, tareas=tareas, miembros=miembros)
 
 @app.route('/delete_grupo/<int:grupo_id>', methods=['POST'])
 @login_required
