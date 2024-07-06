@@ -113,7 +113,11 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ tarea.titulo }}</h5>
                             <p class="card-text">{{ tarea.descripcion }}</p>
-                            
+                            {% if tarea.propietario_id == current_user.id %}
+                            <form method = "POST" action="{{ url_for('descompartir_tarea_grupo', tarea_id=tarea.id, grupo_id=grupo.id) }}" >
+                                <button type="submit" class="btn btn-danger">Dejar de compartir</button>
+                            </form>
+                            {% endif %}   
                         </div>
                     </div>
                 </div>

@@ -194,13 +194,13 @@ def delete_archivo(archivo_id):
     """
     archivo = Archivo.query.get_or_404(archivo_id)
     archivo_path = archivo.ruta
-    if os.path.exists(archivo_path):
+    if archivo.propietario_id == current_user.id and os.path.exists(archivo_path):
         os.remove(archivo_path)
         db.session.delete(archivo)
         db.session.commit() #Archivo eliminada de BD y ficheros     
         flash('Archivo eliminado.', 'success') 
     else:
-        pass
+        flash('No tienes permiso para eliminar esta archivo.', 'danger')
     return redirect(url_for('archivos'))
 
 @app.route('/descargar/<int:archivo_id>', methods=['GET'])
@@ -265,8 +265,8 @@ def descompartir_archivo_grupo(archivo_id, grupo_id):
     archivo = Archivo.query.get_or_404(archivo_id)
     grupo = Grupo.query.get_or_404(grupo_id)
     
-    # Verificar que el usuario es el propietario del archivo
-    if archivo.propietario_id != current_user.id:
+    # Verificar que el usuario es el propietario del archivo o el propitario del grupo
+    if archivo.propietario_id != current_user.id  and grupo.propietario_id != current_user.id:
         flash('No tienes permiso para descompartir este archivo.', 'danger')
         return redirect(url_for('ver_grupo', grupo_id=grupo_id))
     
@@ -284,12 +284,22 @@ def descompartir_archivo_grupo(archivo_id, grupo_id):
 @app.route('/tareas', methods=['GET', 'POST'])
 @login_required
 def tareas():
+    """
+    Vista para mostrar y crear tareas del usuario.
+    Methods:
+        GET: Muestra todas las tareas del usuario.
+        POST: Crea una nueva tarea del usuario.
+    Returns:
+        render_template: Renderiza el template 'tareas.html' con las tareas y parametros del usuario..
+        redirect: Redirige a la vista de tareas después de crear o eliminar una tarea.
+    """
     if request.method == 'POST':
         titulo = request.form['titulo']
         descripcion = request.form['descripcion']
         nueva_tarea = Tarea(titulo=titulo, descripcion=descripcion, propietario_id=current_user.id)
         db.session.add(nueva_tarea)
         db.session.commit()
+        flash('Tarea creada con éxito.', 'success')
         return redirect(url_for('tareas'))
     
     tareas = Tarea.query.filter_by(propietario_id=current_user.id).all()
@@ -299,18 +309,32 @@ def tareas():
 @app.route('/deletetarea/<int:tarea_id>', methods=['POST'])
 @login_required
 def delete_tarea(tarea_id):
+    """
+    Vista para eliminar una tarea del usuario.
+    Args:
+        tarea_id (int): ID de la tarea a eliminar.
+    Returns:
+        redirect: Redirige a la vista de tareas después de eliminar la tarea.
+    """
     tarea = Tarea.query.get_or_404(tarea_id)
     if tarea.propietario_id == current_user.id:
         db.session.delete(tarea)
         db.session.commit()
         flash('Tarea eliminada.', 'success')
     else:
-        pass
+        flash('No tienes permiso para eliminar esta tarea.', 'danger')
     return redirect(url_for('tareas'))
 
 @app.route('/editartarea/<int:tarea_id>', methods=['POST'])
 @login_required
 def editar_tarea(tarea_id):
+    """
+    Vista para editar una tarea del usuario.
+    Args:
+        tarea_id (int): ID de la tarea.
+    Returns:
+        redirect: Redirige a la vista de tareas.
+    """
     tarea = Tarea.query.get_or_404(tarea_id)
     if tarea.propietario_id == current_user.id:
         tarea.titulo = request.form['titulo']
@@ -318,12 +342,20 @@ def editar_tarea(tarea_id):
         db.session.commit()
         flash('Tarea actualizada.', 'success')
     else:
-        pass
+        flash('No tienes permiso para editar esta tarea.', 'danger')
     return redirect(url_for('tareas'))
 
 @app.route('/compartir_tarea_grupo', methods=['POST'])
 @login_required
 def compartir_tarea_grupo():
+    """
+    Vista para compartir una tarea con un grupo.
+    Args:
+        tarea_id (int): ID de la tarea a compartir.
+        grupo_id (int): ID del grupo para compartir.
+    Returns:
+        redirect: Redirige a la vista de tareas.
+    """
     tarea_id = request.form['tarea_id']
     grupo_id = request.form['grupo_id']
     
@@ -337,7 +369,37 @@ def compartir_tarea_grupo():
         nueva_asociacion = TareaGrupo(tarea_id=tarea.id, grupo_id=grupo.id)
         db.session.add(nueva_asociacion)
         db.session.commit()
+        flash('Tarea compartida.', 'success')
     return redirect(url_for('tareas'))
+
+@app.route('/descompartir_tarea_grupo/<int:tarea_id>/<int:grupo_id>', methods=['POST'])
+@login_required
+def descompartir_tarea_grupo(tarea_id, grupo_id):
+    """
+    Vista para descompartir una tarea de un grupo.
+    Args:
+        tarea_id (int): ID de la tarea a descompartir.
+        grupo_id (int): ID del grupo.
+    Returns:
+        redirect: Redirige a la vista del grupo con la tarea descompartida
+    """
+    tarea = Tarea.query.get_or_404(tarea_id)
+    grupo = Grupo.query.get_or_404(grupo_id)
+
+    # Verificar que el usuario es el propietario de la tarea o el propietario del grupo
+    if tarea.propietario_id != current_user.id and grupo.propietario_id != current_user.id:
+        flash('No tienes permiso para descompartir esta tarea.', 'danger')
+        return redirect(url_for('ver_grupo', grupo_id=grupo_id))
+
+    tarea_grupo = TareaGrupo.query.filter_by(tarea_id=tarea.id, grupo_id=grupo.id).first()
+    if tarea_grupo:
+        db.session.delete(tarea_grupo)
+        db.session.commit()
+        flash('Tarea descompartida con éxito.', 'success')
+    else:
+        flash('La tarea no estaba compartida con este grupo.', 'warning')
+    return redirect(url_for('ver_grupo', grupo_id=grupo_id))
+
 
 # Vista para ver grupos
 @app.route('/grupos', methods=['GET'])
