@@ -12,7 +12,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///usuarios.db'  # Nombre de la 
 db.init_app(app)
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files')    #Directorio base donde se guardan los archivos
-#ALLOWED_EXTENSIONS = {'txt', 'pdf','jpg', 'jpeg'}
+ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx', 'odt', 'jpg', 'jpeg', 'png', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
@@ -48,6 +48,10 @@ def listar_grupos():
 def cargar_usuario(usuario_id):
     return Usuario.query.get(int(usuario_id))
 
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -161,16 +165,21 @@ def upload():
     """
     if request.method == 'POST':
         file = request.files['file']
-        filename = secure_filename(file.filename)
-        user_folder = os.path.join(UPLOAD_FOLDER, current_user.usuario)
-        if not os.path.exists(user_folder):
-            os.makedirs(user_folder)
-        file.save(os.path.join(user_folder, filename))
-        # Primera forma de entrada en la base de datos
-        nuevo_archivo = Archivo(nombre=filename, ruta=os.path.join(user_folder, filename), propietario_id=current_user.id)
-        db.session.add(nuevo_archivo)
-        db.session.commit()
-        return redirect(url_for('archivos'))
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            user_folder = os.path.join(UPLOAD_FOLDER, current_user.usuario)
+           
+            if not os.path.exists(user_folder):
+                os.makedirs(user_folder)
+            file.save(os.path.join(user_folder, filename))
+
+            nuevo_archivo = Archivo(nombre=filename, ruta=os.path.join(user_folder, filename), propietario_id=current_user.id)
+            db.session.add(nuevo_archivo)
+            db.session.commit()
+            return redirect(url_for('archivos'))
+        else:
+            flash('Archivo no permitido', 'danger')
+            return redirect(url_for('archivos'))
     return render_template('uploadPop.html')
 
 @app.route('/delete/<int:archivo_id>', methods=['POST'])
@@ -217,22 +226,29 @@ def descargar_archivo(archivo_id):
 @app.route('/compartir_archivo_grupo', methods=['POST'])
 @login_required
 def compartir_archivo_grupo():
+    """
+    Vista para compartir un archivo con un grupo.
+    Args:
+        archivo_id (int): ID del archivo a compartir.
+        grupo_id (int): ID del grupo para compartir.
+    Returns:
+        redirect: Redirige a la vista de archivos.
+    """
     archivo_id = request.form['archivo_id']
     grupo_id = request.form['grupo_id']
     
     archivo = Archivo.query.get_or_404(archivo_id)
     grupo = Grupo.query.get_or_404(grupo_id)
     
-
     archivo_grupo_existente = ArchivoGrupo.query.filter_by(archivo_id=archivo.id, grupo_id=grupo.id).first()
     if archivo_grupo_existente:
-        flash('Esate archivo ya esta disponible en este grupo.', 'warning')
+        flash('Este archivo ya esta disponible en este grupo.', 'warning')
     else:
         #Guardamos que el archivo pertener al grupo en la tabla 
         nueva_asociacion = ArchivoGrupo(archivo_id=archivo.id, grupo_id=grupo.id)
         db.session.add(nueva_asociacion)
         db.session.commit()
-
+        flash('Archivo compartido.', 'success')
     return redirect(url_for('archivos'))
 
 @app.route('/descompartir_archivo_grupo/<int:archivo_id>/<int:grupo_id>', methods=['POST'])
