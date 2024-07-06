@@ -42,44 +42,45 @@
             
             <!-- Solo propietario, invitar usuario -->
             {% if current_user.id == grupo.propietario_id %}
-            <div class="admin-section bg-light p-3 mb-3">
-                <h5>Administración del Grupo</h5>
-                
-                <button class="btn btn-primary mb-2 mr-1" type="button" data-toggle="collapse" data-target="#invitarForm" aria-expanded="false" aria-controls="invitarForm">
-                    Invitar a un usuario
-                </button>
-                <div class="collapse mb-2" id="invitarForm">
-                    <form method="POST" action="{{ url_for('invitar_usuario', grupo_id=grupo.id) }}">
-                        <div class="form-group">
-                            <label for="email">Correo electrónico del usuario</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Enviar invitación</button>
-                    </form>
-                </div>
-                
-                <button class="btn btn-danger mb-2 mr-1" type="button" data-toggle="collapse" data-target="#eliminarForm" aria-expanded="false" aria-controls="eliminarForm">
-                    Eliminar usuario
-                </button>
-                <div class="collapse mb-2" id="eliminarForm">
-                    <form method="POST" action="{{ url_for('eliminar_miembro', grupo_id=grupo.id) }}">
-                        <div class="form-group">
-                            <label for="usuario_id">Seleccionar usuario</label>
-                            <select class="form-control" id="usuario_id" name="usuario_id" required>
-                                <option value="" disabled selected>Seleccionar usuario</option>
-                                {% for miembro in miembros %}
-                                {% if miembro.id != grupo.propietario_id %} <!-- Para que no pueda expulsarse al propietario-->
-                                <option value="{{ miembro.id }}">{{ miembro.usuario }}</option>
-                                {% endif %}
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-danger">Confirmar</button>
-                    </form>
-                </div>  
-                <form method="POST" action="/delete_grupo/{{ grupo.id }}" class="d-inline mr-1">
-                    <button type="submit" class="btn btn-outline-danger mb-2 mr-1">Eliminar grupo</button>
-                </form>       
+            <div class="admin-section bg-light p-3 mb-3"  >
+                <h5 data-toggle="collapse" data-target="#adminContent" style="cursor: pointer;">Administración del Grupo</h5>
+                <div class="collapse" id="adminContent">
+                    <button class="btn btn-primary mb-2 mr-1" type="button" data-toggle="collapse" data-target="#invitarForm" aria-expanded="false" aria-controls="invitarForm">
+                        Invitar a un usuario
+                    </button>
+                    <div class="collapse mb-2" id="invitarForm">
+                        <form method="POST" action="{{ url_for('invitar_usuario', grupo_id=grupo.id) }}">
+                            <div class="form-group">
+                                <label for="email">Correo electrónico del usuario</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Enviar invitación</button>
+                        </form>
+                    </div>
+                    
+                    <button class="btn btn-danger mb-2 mr-1" type="button" data-toggle="collapse" data-target="#eliminarForm" aria-expanded="false" aria-controls="eliminarForm">
+                        Eliminar usuario
+                    </button>
+                    <div class="collapse mb-2" id="eliminarForm">
+                        <form method="POST" action="{{ url_for('eliminar_miembro', grupo_id=grupo.id) }}">
+                            <div class="form-group">
+                                <label for="usuario_id">Seleccionar usuario</label>
+                                <select class="form-control" id="usuario_id" name="usuario_id" required>
+                                    <option value="" disabled selected>Seleccionar usuario</option>
+                                    {% for miembro in miembros %}
+                                    {% if miembro.id != grupo.propietario_id %} <!-- Para que no pueda expulsarse al propietario-->
+                                    <option value="{{ miembro.id }}">{{ miembro.usuario }}</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-danger">Confirmar</button>
+                        </form>
+                    </div>  
+                    <form method="POST" action="/delete_grupo/{{ grupo.id }}" class="d-inline mr-1">
+                        <button type="submit" class="btn btn-outline-danger mb-2 mr-1">Eliminar grupo</button>
+                    </form>  
+                </div>     
             </div>
             <hr>
             {% endif %}

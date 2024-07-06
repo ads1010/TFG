@@ -428,6 +428,11 @@ def ver_grupos():
 @app.route('/crear_grupo', methods=['POST'])
 @login_required
 def crear_grupo():
+    """
+    Vista para crear un nuevo grupo. 
+    Returns:
+        redirect: Redirige a la vista de grupos después de crear el grupo.
+    """
     nombre = request.form['nombre']
     descripcion = request.form['descripcion']
     nuevo_grupo = Grupo(nombre=nombre, descripcion=descripcion, propietario_id=current_user.id)
@@ -444,6 +449,13 @@ def crear_grupo():
 @app.route('/grupo/<int:grupo_id>', methods=['GET'])
 @login_required
 def ver_grupo(grupo_id):
+    """
+    Vista para ver la página de un grupo.
+    Args:
+        grupo_id (int): ID del grupo a visualizar.
+    Returns:
+        render_template: Renderiza el template 'grupo.html' con los detalles del grupo, archivos, tareas y miembros.
+    """
     grupo = Grupo.query.get_or_404(grupo_id)
     archivos = grupo.archivos  
     tareas = grupo.tareas  
@@ -453,6 +465,13 @@ def ver_grupo(grupo_id):
 @app.route('/delete_grupo/<int:grupo_id>', methods=['POST'])
 @login_required
 def delete_grupo(grupo_id):
+    """
+    Vista para eliminar un grupo.
+    Args:
+        grupo_id (int): ID del grupo a eliminar.
+    Returns:
+        redirect: Redirige a la vista de grupos con el grupo eliminado.
+    """
     grupo = Grupo.query.get_or_404(grupo_id)
     if grupo.propietario_id == current_user.id:
         db.session.delete(grupo)
@@ -465,6 +484,13 @@ def delete_grupo(grupo_id):
 @app.route('/editargrupo/<int:grupo_id>', methods=['POST'])
 @login_required
 def editar_grupo(grupo_id):
+    """
+    Vista para editar los detalles de un grupo.
+    Args:
+        grupo_id (int): ID del grupo a editar.
+    Returns:
+        redirect: Redirige a la vista de grupos después de editar el grupo.
+    """
     grupo = Grupo.query.get_or_404(grupo_id)
     if grupo.propietario_id == current_user.id:
         grupo.nombre = request.form['nombre']
@@ -478,6 +504,13 @@ def editar_grupo(grupo_id):
 @app.route('/invitar/<int:grupo_id>', methods=['POST'])
 @login_required
 def invitar_usuario(grupo_id):
+    """
+    Vista para invitar a un usuario a un grupo.
+    Args:
+        grupo_id (int): ID del grupo al que se desea invitar al usuario.
+    Returns:
+        redirect: Redirige a la vista del grupo.
+    """
     email = request.form['email']
     usuario = Usuario.query.filter_by(email=email).first()
     grupo = Grupo.query.get_or_404(grupo_id)
@@ -512,6 +545,35 @@ def eliminar_miembro(grupo_id):
         flash('El usuario no pertenece al grupo.', 'warning')
     
     return redirect(url_for('ver_grupo', grupo_id=grupo_id))
+
+@app.route('/abandonar_grupo/<int:grupo_id>', methods=['POST'])
+@login_required
+def abandonar_grupo(grupo_id):
+    """
+    Vista para que el usuario abandone un grupo.
+    Args:
+        grupo_id (int): ID del grupo a abandonar.
+    Returns:
+        redirect: Redirige a la vista de grupos.
+    """
+    grupo = Grupo.query.get_or_404(grupo_id)
+    usuario_id = current_user.id
+
+    # Verificar que el usuario no es el propietario del grupo
+    if grupo.propietario_id == usuario_id:
+        flash('No puedes abandonar un grupo que administras.', 'danger')
+        return redirect(url_for('ver_grupo', grupo_id=grupo_id))
+
+    grupo_usuario = GrupoUsuario.query.filter_by(grupo_id=grupo_id, usuario_id=usuario_id).first()
+
+    if grupo_usuario:
+        db.session.delete(grupo_usuario)
+        db.session.commit()
+        flash('Has abandonado el grupo.', 'success')
+    else:
+        flash('No perteneces a este grupo.', 'warning')
+
+    return redirect(url_for('ver_grupos'))
 
 
 if __name__ == '__main__':

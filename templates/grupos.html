@@ -39,11 +39,18 @@
                         <div class="card shadow-sm p-2">
                             <div class="card-body">
                                 <h5 class="card-title ">{{ grupo.nombre }}</h5>
-                                <p class="card-text">{{ grupo.descripcion }}</p>
+                                <p class="card-text mb-2">{{ grupo.descripcion }}</p>
                                 <!-- Archivos -->
+                                {% if grupo.propietario_id != current_user.id %}
+                                </a>
+                                <form action="{{ url_for('abandonar_grupo', grupo_id=grupo.id) }}" method="post">
+                                    <button type="submit" class="btn btn-outline-danger">Dejar grupo</button>
+                                </form>
+                                {% endif %}
                             </div>
                         </div>
-                    </a>
+                    
+                    
                 </div>
                 {% endfor %}
             </div>
