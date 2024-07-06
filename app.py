@@ -235,6 +235,36 @@ def compartir_archivo_grupo():
 
     return redirect(url_for('archivos'))
 
+@app.route('/descompartir_archivo_grupo/<int:archivo_id>/<int:grupo_id>', methods=['POST'])
+@login_required
+def descompartir_archivo_grupo(archivo_id, grupo_id):
+    """
+    Vista para descompartir un archivo de un grupo.
+    Args:
+        archivo_id (int): ID del archivo a descompartir.
+        grupo_id (int): ID del grupo.
+    Returns:
+        redirect: Redirige a la vista del grupo.
+    """
+    archivo = Archivo.query.get_or_404(archivo_id)
+    grupo = Grupo.query.get_or_404(grupo_id)
+    
+    # Verificar que el usuario es el propietario del archivo
+    if archivo.propietario_id != current_user.id:
+        flash('No tienes permiso para descompartir este archivo.', 'danger')
+        return redirect(url_for('ver_grupo', grupo_id=grupo_id))
+    
+    archivo_grupo = ArchivoGrupo.query.filter_by(archivo_id=archivo.id, grupo_id=grupo.id).first()
+    if archivo_grupo:
+        db.session.delete(archivo_grupo)
+        db.session.commit()
+        flash('Archivo descompartido del grupo.', 'success')
+    else:
+        flash('El archivo no está compartido con este grupo.', 'warning')
+    
+    return redirect(url_for('ver_grupo', grupo_id=grupo_id))
+
+
 @app.route('/tareas', methods=['GET', 'POST'])
 @login_required
 def tareas():

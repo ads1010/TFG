@@ -94,7 +94,12 @@
                                 <a href="{{ url_for('descargar_archivo', archivo_id=archivo.id) }}" class=" ml-2 ">
                                     <i class="fas fa-download"></i>
                                 </a>
-                            </div>                       
+                            </div>   
+                            {% if archivo.propietario_id == current_user.id %}
+                                <form method="POST" action="{{ url_for('descompartir_archivo_grupo', archivo_id=archivo.id, grupo_id=grupo.id) }}">
+                                    <button type="submit" class="btn btn-danger btn-sm mt-2">Dejar de compartir</button>
+                                </form>
+                            {% endif %}                    
                         </div>
                     </div>
                 </div>
