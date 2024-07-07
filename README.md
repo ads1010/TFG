@@ -10,10 +10,11 @@ Rubén Ruiz González
 
 ## Despliegue
 
-Para el despliegue se ha probado el servicio "GITPOD", pero durante el uso se descubrio que este solo permitia un uso durante 50h.
+Para el despliegue se ha probado el servicio "GITPOD", pero durante el uso se descubrió que este solo permitía un uso durante 50 horas.
 
-Asi que finalmente la aplicación se encuentra desplegada en un VPS personal.
-http://http://185.166.215.219/
+
+Así que finalmente la aplicación se encuentra desplegada en un VPS personal.
+http://185.166.215.219/
 
 ## Instalación
 
@@ -31,29 +32,29 @@ Se recomienda tener instalados los siguientes programas en tu sistema:
 Vamos a enfocar la instalación para Windows. Los pasos serán muy similares en Linux, pero con los comandos apropiados.
 
 1. Clonar repositorio
- '''bash
+ ```bash
     git clone https://github.com/ads1010/TFG-Plataforma-web-colaborativa
     cd TFG-Plataforma-web-colaborativa
-
+```
 2. Recomendable Crear entorno virtual
- '''bash
+ ```bash
     python -m venv ./venv
- '''
+ ```
 
 3. Activar el entorno virual
-'''bash
+```bash
    venv\Scripts\activate  # Para Windows
-'''
+```
 
 4. Instalar dependencias
-'''bash
+```bash
    pip install -r requirements.txt
-'''
+```
 
 5. Ejecución
-'''bash
+```bash
 python app.py
-'''
+```
 
 ## Contacto
 Para cualquier consulta o sugerencia, por favor contacta a [ads1010@alu.ubu.es](mailto:ads1010@alu.ubu.es).
