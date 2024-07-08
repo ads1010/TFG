@@ -116,8 +116,12 @@ def registro():
         
         # Verifica si el usuario ya existe
         email_existente = Usuario.query.filter_by(email=email).first()
+        nombre_existente = Usuario.query.filter_by(usuario=usuario).first()
         if email_existente:
             mensaje = 'El Email ya existe. Por favor, introduce otro email.'
+            return render_template('registro.html', mensaje=mensaje)
+        elif nombre_existente:
+            mensaje = 'El nombre ya existe. Por favor, introduce otro nombre.'
             return render_template('registro.html', mensaje=mensaje)
         else:
             # Crea un nuevo usuario
