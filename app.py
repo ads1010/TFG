@@ -43,18 +43,39 @@ def listar_grupos():
     return grupos
 
 
-# Función para cargar un usuario
+
 @login_manager.user_loader
 def cargar_usuario(usuario_id):
+    """
+    Función para cargar un usuario 
+    Args:
+        usuario_id (int): ID del usuario a cargar.
+    Returns:
+        Usuario: Objeto del usuario.
+    """
     return Usuario.query.get(int(usuario_id))
 
 @app.errorhandler(404)
 def page_not_found(error):
+    """
+    Manejador de errores para el error 404.
+    Args:
+        error: Objeto del error.
+    Returns:
+        redirect: Redirige a la vista de inicio con un mensaje de error.
+    """
     flash('Error 404, algun recurso no existe', 'danger')
     return redirect(url_for('inicio'))
 
 
 def allowed_file(filename):
+    """
+    Comprueba si un archivo está permitido.
+    Args:
+        filename (str): Nombre del archivo .
+    Returns:
+        bool: True si el archivo está permitido, False en caso contrario.
+    """
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -156,7 +177,7 @@ def archivos():
     return render_template('archivos.html', nombre_usuario=current_user.usuario, files= files, grupos= grupos)
 
 
-@app.route('/upload',methods=['GET', 'POST'])  #Mantener? Puede ser el post de archivos
+@app.route('/upload',methods=['GET', 'POST'])  
 @login_required
 def upload():
     """
@@ -533,6 +554,13 @@ def invitar_usuario(grupo_id):
 @app.route('/eliminar_miembro/<int:grupo_id>', methods=['POST'])
 @login_required
 def eliminar_miembro(grupo_id):
+    """
+    Vista para eliminar un miembro de un grupo.
+    Args:
+        grupo_id (int): ID del grupo donde se quiere eliminar al miembro.
+    Returns:
+        redirect: Redirige a la vista del grupo después de eliminar al miembro.
+    """
     grupo = Grupo.query.get_or_404(grupo_id)
     usuario_id = request.form['usuario_id']
     grupo_usuario = GrupoUsuario.query.filter_by(grupo_id=grupo_id, usuario_id=usuario_id).first()  
